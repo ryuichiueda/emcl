@@ -16,8 +16,11 @@ using namespace std;
 ParticleFilter::ParticleFilter(double x, double y, double t, int num, 
 				const shared_ptr<OdomModel> &odom_model,
 				const shared_ptr<LikelihoodFieldMap> &map,
-				double alpha_th)
-	: last_odom_(NULL), prev_odom_(NULL), alpha_threshold_(alpha_th)
+				double alpha_th, double expansion_radius_position,
+				double expansion_radius_orientation)
+	: last_odom_(NULL), prev_odom_(NULL), alpha_threshold_(alpha_th),
+	  expansion_radius_position_(expansion_radius_position),
+	  expansion_radius_orientation_(expansion_radius_orientation)
 {
 	odom_model_ = move(odom_model);
 	map_ = move(map);
@@ -243,9 +246,12 @@ void ParticleFilter::initialize(double x, double y, double t)
 void ParticleFilter::expansionResetting(void)
 {
 	for(auto &p : particles_){
-		p.p_.x_ += ((double)rand()/RAND_MAX - 0.5)*0.2;
-		p.p_.y_ += ((double)rand()/RAND_MAX - 0.5)*0.2;
-		p.p_.t_ += ((double)rand()/RAND_MAX - 0.5)*0.4;
+		double length = 2*((double)rand()/RAND_MAX - 0.5)*expansion_radius_position_;
+		double direction = 2*((double)rand()/RAND_MAX - 0.5)*M_PI;
+
+		p.p_.x_ += length*cos(direction);
+		p.p_.y_ += length*sin(direction);
+		p.p_.t_ += 2*((double)rand()/RAND_MAX - 0.5)*expansion_radius_orientation_;
 		p.w_ = 1.0/particles_.size();
 	}
 }
