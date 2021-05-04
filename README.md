@@ -2,6 +2,10 @@
 
 emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wiki.ros.org/amcl). Differently from amcl, KLD-samping and adaptive MCL are not implemented. Instead, the expansion resetting is implemented[^1].
 
+## expansion resetting
+
+This method expands the distribution of particles when the robot suffers surprising sensor data. This mechanism is effective toward skidding and small range kidnaps of robots. 
+
 ## Nodes
 
 ### mcl_node
@@ -64,10 +68,6 @@ This node transforms laser scans and odometry transform messages to pose estimat
     * threshold for expansion resetting
 
 ## Notes
-
-### expansion resetting
-
-This method expands the distribution of particles when the robot suffers surprising sensor data. This mechanism is effective toward skidding and small range kidnaps of robots. 
 
 ### how to decide the alpha threshold
 
