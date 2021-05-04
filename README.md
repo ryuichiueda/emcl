@@ -71,7 +71,7 @@ This node transforms laser scans and odometry transform messages to pose estimat
 
 ### how to decide the alpha threshold
 
-At first, set `~alpha_threshold` to `0.0` and observe alpha values through `/alpha` topic while the self-localization goes well. Then give some noises to the sensor or give small kidnaps to the robot, and please observe the alpha values again. When the sets of alpha values with the former and the latter are largely different, you can find a stable alpha threshold between them. If it is ambiguous, please adjust the value as consecutive resettings don't occur. Note that a reset don't change the center of particles largely. So it's okay even if resettings occur sporadically.
+At first, set `~alpha_threshold` to `0.0` and observe alpha values through `/alpha` topic while the self-localization goes well. Then give some noises to the sensor or give small kidnaps to the robot, and please observe the alpha values again. When the sets of alpha values obtained with the former and with the latter are largely different, you can find a stable alpha threshold between them. If it is ambiguous, please adjust the value as consecutive resettings don't occur. Note that a reset don't change the center of particles largely. So it's okay even if resettings occur sporadically.
 
 ### likelihood field
 
