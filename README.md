@@ -66,6 +66,10 @@ This node transforms laser scans and odometry transform messages to pose estimat
     * maximum distance to inflate occupied cells on the likelihood field map
 * ~alpha_threshold (double, default: 0.0)
     * threshold for expansion resetting
+* ~expansion_radius_position (double, default: 0.1)
+    * maximum change of the position on the xy-plane when the reset replaces a particle
+* ~expansion_radius_orientation (double, default: 0.2)
+    * maximum change of the yaw angle when the reset replaces a particle
 
 ## Notes
 
