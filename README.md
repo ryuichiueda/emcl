@@ -81,7 +81,11 @@ At first, set `~alpha_threshold` to `0.0` and observe alpha values through `/alp
 
 This implemenation uses an ad-hoc likelihood field model. Occupied cells on the map are inflated so that each collision detection between a laser beam and an occupied cell is relaxed. The likelihood for each cell is given with a pyramidal kernel function. The parameter `~laser_likelihood_max_dist` gives the length from the center cell to the edge of the pyramid.
 
-### citation
+## demo movie
+
+[![](https://img.youtube.com/vi/X4zXKi0mr0I/0.jpg)](https://www.youtube.com/watch?v=X4zXKi0mr0I)
+
+## citation
 
 [^1]: R. Ueda, T. Arai, K. Sakamoto, T. Kikuchi, S. Kamiya: Expansion resetting for recovery from fatal error in Monte Carlo localization - comparison with sensor resetting methods, IEEE/RSJ IROS, pp.2481-2486, 2004. 
 
