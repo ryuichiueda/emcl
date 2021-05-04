@@ -25,6 +25,8 @@ This node transforms laser scans and odometry transform messages to pose estimat
     * poses of the particles
 * tf ([tf/tfMessage](http://docs.ros.org/en/api/tf/html/msg/tfMessage.html))
     * the transform from odom (which can be remapped via the ~odom_frame_id parameter) to map
+* alpha (std_msgs/Float32)
+    * marginal likelihood of particles after sensor update
 
 
 #### Services Called
@@ -58,13 +60,22 @@ This node transforms laser scans and odometry transform messages to pose estimat
     * standard deviation of rotational motion noise by forward motion
 * ~laser_likelihood_max_dist (double, default: 0.2 meters)
     * maximum distance to inflate occupied cells on the likelihood field map
+* ~alpha_threshold (double, default: 0.0)
+    * threshold for expansion resetting
 
 ## Notes
+
+### expansion resetting
+
+This method expands the distribution of particles when the robot suffers surprising sensor data. This mechanism is effective toward skidding and small range kidnaps of robots. 
+
+### how to decide the alpha threshold
+
+At first, set `~alpha_threshold` to `0.0` and observe alpha values through `/alpha` topic while the self-localization goes well. Then give some noises to the sensor, or give small kidnaps to the robot. When the sets of alpha values with the former and the latter are largely different, you can find a stable alpha threshold between them. If it is ambiguous, please adjust the value as consecutive resettings don't occur. Note that a reset don't change the center of particles largely. So it's okay even if resettings occur sporadically.
 
 ### likelihood field
 
 This implemenation uses an ad-hoc likelihood field model. Occupied cells on the map are inflated so that each collision detection between a laser beam and an occupied cell is relaxed. The likelihood for each cell is given with a pyramidal kernel function. The parameter `~laser_likelihood_max_dist` gives the length from the center cell to the edge of the pyramid.
-
 
 ### citation
 

@@ -30,6 +30,7 @@ ParticleFilter::ParticleFilter(double x, double y, double t, int num,
 		particles_.push_back(p);
 
 	scan_.processed_seq_ = -1;
+	alpha_ = 1.0;
 }
 
 ParticleFilter::~ParticleFilter()
@@ -82,9 +83,8 @@ void ParticleFilter::sensorUpdate(void)
 	for(auto &p : particles_)
 		p.w_ *= p.likelihood(map_.get(), ranges, angle_min, angle_increment);
 
-	double a = normalize();
-	ROS_INFO("ALPHA: %f, %f", a, alpha_threshold_);
-	if(a < alpha_threshold_){
+	alpha_ = normalize();
+	if(alpha_ < alpha_threshold_){
 		ROS_INFO("RESET");
 		expansionResetting();
 		for(auto &p : particles_)

@@ -36,6 +36,7 @@ private:
 
 	ros::Publisher particlecloud_pub_;
 	ros::Publisher pose_pub_;
+	ros::Publisher alpha_pub_;
 	ros::Subscriber laser_scan_sub_;
 	ros::Subscriber initial_pose_sub_;
 

@@ -31,6 +31,8 @@ public:
 	~ParticleFilter();
 
 	vector<Particle> particles_;
+	double alpha_;
+
 	void sensorUpdate(void);
 	void motionUpdate(double x, double y, double t);
 

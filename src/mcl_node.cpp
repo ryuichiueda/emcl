@@ -10,8 +10,8 @@
 
 #include "tf2/utils.h"
 #include "geometry_msgs/PoseArray.h"
-
 #include "nav_msgs/GetMap.h"
+#include "std_msgs/Float32.h"
 using namespace std;
 
 MclNode::MclNode() : private_nh_("~") 
@@ -33,6 +33,7 @@ void MclNode::initTopic(void)
 {
 	particlecloud_pub_ = nh_.advertise<geometry_msgs::PoseArray>("particlecloud", 2, true);
 	pose_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("mcl_pose", 2, true);
+	alpha_pub_ = nh_.advertise<std_msgs::Float32>("alpha", 2, true);
 	laser_scan_sub_ = nh_.subscribe("scan", 2, &MclNode::cbScan, this);
 	initial_pose_sub_ = nh_.subscribe("initialpose", 2, &MclNode::initialPoseReceived, this);
 
@@ -132,6 +133,8 @@ void MclNode::loop(void)
 	publishOdomFrame(x, y, t);
 	publishPose(x, y, t, x_var, y_var, t_var, xy_cov, yt_cov, tx_cov);
 	publishParticles();
+
+	alpha_pub_.publish((float)pf_->alpha_);
 }
 
 void MclNode::publishPose(double x, double y, double t,
