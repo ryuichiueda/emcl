@@ -60,7 +60,7 @@ void MclNode::initPF(void)
 	private_nh_.param("num_particles", num, 0);
 
 	double alpha_th;
-	private_nh_.param("alpha_threshold", alpha_th, 0.001);
+	private_nh_.param("alpha_threshold", alpha_th, 0.0);
 
 	shared_ptr<LikelihoodFieldMap> map = move(initMap());
 	shared_ptr<OdomModel> om = move(initOdometry());

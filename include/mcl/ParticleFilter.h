@@ -56,6 +56,7 @@ private:
 	shared_ptr<LikelihoodFieldMap> map_;
 
 	double alpha_threshold_;
+	void expansionResetting(void);
 };
 
 #endif
