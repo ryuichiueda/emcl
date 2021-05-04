@@ -1,10 +1,10 @@
 # emcl: mcl with expansion resetting
 
-emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wiki.ros.org/amcl). Differently from amcl, KLD-samping and adaptive MCL are not implemented. Instead, the expansion resetting is implemented[^1][^2].
+emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wiki.ros.org/amcl). Differently from amcl, KLD-samping and adaptive MCL are not implemented. Instead, the expansion resetting is implemented[^1].
 
 ## expansion resetting
 
-The expansion resetting had been used in the classical RoboCup 4-legged robot league as a robust localization mechanism since the robots had made frequent localization errors. This method expands the distribution of particles when the robot suffers surprising sensor data. This mechanism is effective toward skidding and small range kidnaps of robots.  
+The expansion resetting had been used in the classical RoboCup 4-legged robot league as a robust localization mechanism since the robots had made frequent localization errors[^2]. This method expands the distribution of particles when the robot suffers surprising sensor data. This mechanism is effective toward skidding and small range kidnaps of robots.  
 
 ### demo movie 
 
@@ -88,6 +88,7 @@ This implemenation uses an ad-hoc likelihood field model. Occupied cells on the 
 
 ## citation
 
-[^1]: R. Ueda, T. Arai, K. Sakamoto, T. Kikuchi, S. Kamiya: Expansion resetting for recovery from fatal error in Monte Carlo localization - comparison with sensor resetting methods, IEEE/RSJ IROS, pp.2481-2486, 2004. 
+[^1]: R. Ueda: "[Syokai Kakuritsu Robotics (lecture note on probabilistic robotics)](https://www.amazon.co.jp/dp/B082SN3VTD)," Kodansya, 2019.
 
-[^2]: R. Ueda: "[Syokai Kakuritsu Robotics (lecture note on probabilistic robotics)](https://www.amazon.co.jp/dp/B082SN3VTD)," Kodansya, 2019.
+[^2]: R. Ueda, T. Arai, K. Sakamoto, T. Kikuchi, S. Kamiya: Expansion resetting for recovery from fatal error in Monte Carlo localization - comparison with sensor resetting methods, IEEE/RSJ IROS, pp.2481-2486, 2004. 
+
