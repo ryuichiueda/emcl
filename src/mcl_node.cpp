@@ -138,7 +138,9 @@ void MclNode::loop(void)
 	publishPose(x, y, t, x_var, y_var, t_var, xy_cov, yt_cov, tx_cov);
 	publishParticles();
 
-	alpha_pub_.publish((float)pf_->alpha_);
+	std_msgs::Float32 alpha_msg;
+	alpha_msg.data = static_cast<float>pf_->alpha_;
+	alpha_pub_.publish(alpha_msg);
 }
 
 void MclNode::publishPose(double x, double y, double t,
