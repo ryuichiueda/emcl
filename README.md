@@ -64,8 +64,10 @@ This node transforms laser scans and odometry transform messages to pose estimat
     * standard deviation of forward motion noise by forward motion
 * ~odom_fw_dev_per_rot (double, default: 0.0001 [m/rad])
     * standard deviation of forward motion noise by rotational motion
-* ~odom_rot_dev_per_fw (double, default: 0.13 [m/m])
+* ~odom_rot_dev_per_fw (double, default: 0.13 [rad/m])
     * standard deviation of rotational motion noise by forward motion
+* ~odom_rot_dev_per_rot (double, default: 0.2 [rad/rad])
+    * standard deviation of rotational motion noise by rotational motion
 * ~laser_likelihood_max_dist (double, default: 0.2 meters)
     * maximum distance to inflate occupied cells on the likelihood field map
 * ~alpha_threshold (double, default: 0.0)
