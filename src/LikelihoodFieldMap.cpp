@@ -29,6 +29,8 @@ LikelihoodFieldMap::LikelihoodFieldMap(const nav_msgs::OccupancyGrid &map, doubl
 		for(int y=0; y<height_; y++)
 			if(map.data[x + y*width_] > 50)
 				setLikelihood(x, y, likelihood_range);
+
+	normalize(); //normalize for publish of this likelihood map
 }
 
 LikelihoodFieldMap::~LikelihoodFieldMap()
@@ -60,3 +62,16 @@ void LikelihoodFieldMap::setLikelihood(int x, int y, double range)
 		for(int j=-cell_num; j<=cell_num; j++)
 			likelihoods_[i+x][j+y] += std::min(weights[abs(i)], weights[abs(j)]);
 }
+
+void LikelihoodFieldMap::normalize(void)
+{
+	double maximum = 0.0;
+	for(int x=0; x<width_; x++)
+		for(int y=0; y<height_; y++)
+			maximum = std::max(likelihoods_[x][y], maximum);
+
+	for(int x=0; x<width_; x++)
+		for(int y=0; y<height_; y++)
+			likelihoods_[x][y] /= maximum;
+}
+

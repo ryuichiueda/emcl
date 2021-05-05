@@ -86,7 +86,7 @@ void ParticleFilter::sensorUpdate(void)
 	for(auto &p : particles_)
 		p.w_ *= p.likelihood(map_.get(), ranges, angle_min, angle_increment);
 
-	alpha_ = normalize();
+	alpha_ = normalize()/ranges.size();
 	if(alpha_ < alpha_threshold_){
 		ROS_INFO("RESET");
 		expansionResetting();

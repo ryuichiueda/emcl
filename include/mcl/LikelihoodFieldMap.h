@@ -29,6 +29,9 @@ public:
 	double resolution_;
 	double origin_x_;
 	double origin_y_;
+
+private:
+	void normalize(void);
 };
 
 #endif
