@@ -139,7 +139,7 @@ void MclNode::loop(void)
 	publishParticles();
 
 	std_msgs::Float32 alpha_msg;
-	alpha_msg.data = static_cast<float>pf_->alpha_;
+	alpha_msg.data = static_cast<float>(pf_->alpha_);
 	alpha_pub_.publish(alpha_msg);
 }
 
