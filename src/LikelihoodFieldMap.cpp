@@ -7,6 +7,7 @@
  */
 
 #include "mcl/LikelihoodFieldMap.h"
+using namespace std;
 
 LikelihoodFieldMap::LikelihoodFieldMap(const nav_msgs::OccupancyGrid &map, double likelihood_range)
 {
@@ -54,13 +55,14 @@ double LikelihoodFieldMap::likelihood(double x, double y)
 void LikelihoodFieldMap::setLikelihood(int x, int y, double range)
 {
 	int cell_num = (int)ceil(range/resolution_);
-	std::vector<double> weights;
+	vector<double> weights;
 	for(int i=0;i<=cell_num;i++)
 		weights.push_back(1.0 - (double)i/cell_num);
 
 	for(int i=-cell_num; i<=cell_num; i++)
 		for(int j=-cell_num; j<=cell_num; j++)
-			likelihoods_[i+x][j+y] += std::min(weights[abs(i)], weights[abs(j)]);
+			likelihoods_[i+x][j+y] = max(likelihoods_[i+x][j+y], 
+			                         min(weights[abs(i)], weights[abs(j)]));
 }
 
 void LikelihoodFieldMap::normalize(void)

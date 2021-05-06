@@ -25,24 +25,21 @@
 
     <param name="laser_likelihood_max_dist" value="0.2"/>
 
-    <param name="alpha_threshold" value="0.4"/>
+    <param name="alpha_threshold" value="0.6"/>
 
     <param name="expansion_radius_position" value="0.1"/>
     <param name="expansion_radius_orientation" value="0.2"/>
+
+    <remap from="scan"                      to="$(arg scan_topic)"/>
+    <param name="laser_max_range"           value="-1.0"/>
+    <param name="laser_min_range"           value="-1.0"/>
+
 
 <!--
     <param name="transform_tolerance"       value="0.5"/>
     <param name="gui_publish_rate"          value="50.0"/>
 
-    <remap from="scan"                      to="$(arg scan_topic)"/>
-    <param name="laser_max_range"           value="3.5"/>
     <param name="laser_max_beams"           value="180"/>
-    <param name="laser_z_hit"               value="0.5"/>
-    <param name="laser_z_short"             value="0.05"/>
-    <param name="laser_z_max"               value="0.05"/>
-    <param name="laser_z_rand"              value="0.5"/>
-    <param name="laser_sigma_hit"           value="0.2"/>
-    <param name="laser_lambda_short"        value="0.1"/>
 -->
   </node>
 </launch>
