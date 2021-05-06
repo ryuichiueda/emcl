@@ -54,6 +54,7 @@ private:
 	double normalize(void);
 	void resetWeight(void);
 	void copyScanSafely(vector<double> &ranges, double &angle_min, double &angle_increment);
+	int countValidBeams(const vector<double> &ranges);
 
 	shared_ptr<OdomModel> odom_model_;
 	shared_ptr<LikelihoodFieldMap> map_;

@@ -83,10 +83,16 @@ void ParticleFilter::sensorUpdate(void)
 	double angle_increment;
 	copyScanSafely(ranges, angle_min, angle_increment);
 
+	int valid_beams = countValidBeams(ranges);
+	if(valid_beams == 0)
+		return;
+
+	ROS_INFO("VALID BEAMS: %d", valid_beams);
+
 	for(auto &p : particles_)
 		p.w_ *= p.likelihood(map_.get(), ranges, angle_min, angle_increment);
 
-	alpha_ = normalize()/ranges.size();
+	alpha_ = normalize()/valid_beams;
 	if(alpha_ < alpha_threshold_){
 		ROS_INFO("RESET");
 		expansionResetting();
@@ -112,6 +118,19 @@ void ParticleFilter::copyScanSafely(vector<double> &ranges, double &angle_min, d
 		angle_min = scan_.angle_min_;
 		angle_increment = scan_.angle_increment_;
 	}
+}
+
+int ParticleFilter::countValidBeams(const vector<double> &ranges)
+{
+	int ans = 0;
+	for(auto &r : ranges){
+		if( isnan(r) or isinf(r) )
+			continue;
+
+		ans++;
+	}
+
+	return ans;
 }
 
 void ParticleFilter::motionUpdate(double x, double y, double t)
@@ -200,9 +219,8 @@ double ParticleFilter::normalizeAngle(double t)
 
 void ParticleFilter::setScan(const sensor_msgs::LaserScan::ConstPtr &msg)
 {
-	if(msg->ranges.size() != scan_.ranges_.size()){
+	if(msg->ranges.size() != scan_.ranges_.size())
 		scan_.ranges_.resize(msg->ranges.size());
-	}
 
 	scan_.seq_ = msg->header.seq;
 	for(int i=0; i<msg->ranges.size(); i++)
