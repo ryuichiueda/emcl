@@ -90,7 +90,7 @@ This node transforms laser scans and odometry transform messages to pose estimat
 
 This implementation uses an ad-hoc likelihood field model. Occupied cells on the map are inflated so that each collision detection between a laser beam and an occupied cell is relaxed. The likelihood for each cell is given with a pyramidal kernel function. The parameter `~laser_likelihood_max_dist` gives the length from the center cell to the edge of the pyramid.
 
-The likelihoods on the field are normalized. The maximum value is 1.0. The alpha value becomes 1.0 when all valid beams hit the 1.0 cells. A suitable `~alpha_threshold` value exists in the range between 0.0 and 1.0. In a noisy environment, or with a noisy sensor, the value should be near zero so as to prohibit prohibit excess resets. However, please note that a reset doesn't change the center of particles largely. So it's okay even if resettings occur sporadically. Please check the `/alpha` topic under various conditions so as to find a suitable `~alpha_threshold` value. 
+The likelihoods on the field are normalized. The maximum value is 1.0. The alpha value becomes 1.0 when all valid beams hit the 1.0 cells. A suitable `~alpha_threshold` value exists in the range between 0.0 and 1.0. In a noisy environment, or with a noisy sensor, the value should be near zero so as to prohibit excess resets. However, please note that a reset doesn't change the center of particles largely. So it's okay even if resettings occur sporadically. Please check the `/alpha` topic under various conditions so as to find a suitable `~alpha_threshold` value. 
 
 ## citation
 
