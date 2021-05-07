@@ -92,6 +92,10 @@ This implementation uses an ad-hoc likelihood field model. Occupied cells on the
 
 The likelihoods on the field are normalized. The maximum value is 1.0. The alpha value becomes 1.0 when all valid beams hit the 1.0 cells. A suitable `~alpha_threshold` value exists in the range between 0.0 and 1.0. In a noisy environment, or with a noisy sensor, the value should be near zero so as to prohibit excess resets. However, please note that a reset doesn't change the center of particles largely. So it's okay even if resettings occur sporadically. Please check the `/alpha` topic under various conditions so as to find a suitable `~alpha_threshold` value. 
 
+## ROS version 
+
+* ROS Noetic Ninjemys (on Ubuntu 20.04 LTS)
+
 ## citation
 
 [^1]: R. Ueda: "[Syokai Kakuritsu Robotics (lecture note on probabilistic robotics)](https://www.amazon.co.jp/dp/B082SN3VTD)," Kodansya, 2019.
