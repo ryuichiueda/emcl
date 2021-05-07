@@ -14,6 +14,7 @@
 using namespace std;
 
 ParticleFilter::ParticleFilter(double x, double y, double t, int num, 
+				double laser_range_min, double laser_range_max,
 				const shared_ptr<OdomModel> &odom_model,
 				const shared_ptr<LikelihoodFieldMap> &map,
 				double alpha_th, double expansion_radius_position,
@@ -32,7 +33,11 @@ ParticleFilter::ParticleFilter(double x, double y, double t, int num,
 	for(int i=0; i<num; i++)
 		particles_.push_back(p);
 
-	scan_.processed_seq_ = -1;
+	processed_seq_ = -1;
+	scan_.range_min_ = laser_range_min;
+	scan_.range_max_ = laser_range_max;
+	ROS_INFO("RANG MAX: %f", scan_.range_max_);
+
 	alpha_ = 1.0;
 }
 
@@ -75,29 +80,33 @@ void ParticleFilter::resampling(void)
 
 void ParticleFilter::sensorUpdate(void)
 {
-	if(scan_.processed_seq_ == scan_.seq_)
+	if(processed_seq_ == scan_.seq_)
 		return;
 
-	vector<double> ranges;
-	double angle_min;
-	double angle_increment;
-	copyScanSafely(ranges, angle_min, angle_increment);
+	Scan scan;
+	int seq = -1;
+	while(seq != scan_.seq_){//trying to copy the latest scan before next 
+		seq = scan_.seq_;
+		scan = scan_;
+	}
 
-	int valid_beams = countValidBeams(ranges);
+	vector<double> ranges;
+	for(auto e : scan.ranges_)
+		ranges.push_back(e);
+
+	int valid_beams = scan.countValidBeams();
 	if(valid_beams == 0)
 		return;
 
-	ROS_INFO("VALID BEAMS: %d", valid_beams);
-
 	for(auto &p : particles_)
-		p.w_ *= p.likelihood(map_.get(), ranges, angle_min, angle_increment);
+		p.w_ *= p.likelihood(map_.get(), scan);
 
 	alpha_ = normalize()/valid_beams;
 	if(alpha_ < alpha_threshold_){
 		ROS_INFO("RESET");
 		expansionResetting();
 		for(auto &p : particles_)
-			p.w_ *= p.likelihood(map_.get(), ranges, angle_min, angle_increment);
+			p.w_ *= p.likelihood(map_.get(), scan);
 	}
 
 	if(normalize() > 0.000001)
@@ -105,32 +114,7 @@ void ParticleFilter::sensorUpdate(void)
 	else
 		resetWeight();
 
-	scan_.processed_seq_ = scan_.seq_;
-}
-
-void ParticleFilter::copyScanSafely(vector<double> &ranges, double &angle_min, double &angle_increment)
-{
-	int seq = -1;
-	while(seq != scan_.seq_){
-		ranges.clear();
-		seq = scan_.seq_;
-		copy(scan_.ranges_.begin(), scan_.ranges_.end(), back_inserter(ranges) );
-		angle_min = scan_.angle_min_;
-		angle_increment = scan_.angle_increment_;
-	}
-}
-
-int ParticleFilter::countValidBeams(const vector<double> &ranges)
-{
-	int ans = 0;
-	for(auto &r : ranges){
-		if( isnan(r) or isinf(r) )
-			continue;
-
-		ans++;
-	}
-
-	return ans;
+	processed_seq_ = scan_.seq_;
 }
 
 void ParticleFilter::motionUpdate(double x, double y, double t)

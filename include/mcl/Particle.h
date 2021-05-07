@@ -18,8 +18,7 @@ class Particle
 public:
 	Particle(double x, double y, double t, double w);
 
-	double likelihood(LikelihoodFieldMap *map, const vector<double> &ranges,
-		double angle_min, double angle_increment);
+	double likelihood(LikelihoodFieldMap *map, Scan &scan);
 	Pose p_;
 	double w_;
 

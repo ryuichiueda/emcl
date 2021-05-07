@@ -25,6 +25,7 @@ class ParticleFilter
 {
 public: 
 	ParticleFilter(double x, double y, double t, int num,
+			double laser_range_min, double laser_range_max,
 			const shared_ptr<OdomModel> &odom_model,
 			const shared_ptr<LikelihoodFieldMap> &map,
 			double alpha_th, double expansion_radius_position,
@@ -48,13 +49,12 @@ private:
 	Pose *prev_odom_;
 
 	Scan scan_;
+	int processed_seq_;
 
 	double normalizeAngle(double t);
 	void resampling(void);
 	double normalize(void);
 	void resetWeight(void);
-	void copyScanSafely(vector<double> &ranges, double &angle_min, double &angle_increment);
-	int countValidBeams(const vector<double> &ranges);
 
 	shared_ptr<OdomModel> odom_model_;
 	shared_ptr<LikelihoodFieldMap> map_;

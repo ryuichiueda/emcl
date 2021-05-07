@@ -70,7 +70,12 @@ void MclNode::initPF(void)
 	private_nh_.param("expansion_radius_position", ex_rad_pos, 0.1);
 	private_nh_.param("expansion_radius_orientation", ex_rad_ori, 0.2);
 
-	pf_.reset(new ParticleFilter(x, y, t, num, om, map, alpha_th, ex_rad_pos, ex_rad_ori));
+	double laser_min, laser_max;
+	private_nh_.param("laser_min_range", laser_min, 0.0);
+	private_nh_.param("laser_max_range", laser_max, 100000000.0);
+
+	pf_.reset(new ParticleFilter(x, y, t, num, laser_min, laser_max,
+					om, map, alpha_th, ex_rad_pos, ex_rad_ori));
 }
 
 shared_ptr<OdomModel> MclNode::initOdometry(void)
