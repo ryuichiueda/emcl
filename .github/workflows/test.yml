@@ -1,0 +1,34 @@
+name: vi_test
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+    
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup ROS
+        run: |
+         git clone https://github.com/ryuichiueda/ros_setup_scripts_Ubuntu18.04_server
+         cd ros_setup_scripts_Ubuntu18.04_server 
+         bash step0.bash
+         bash step1.bash
+         sudo apt-get install ros-melodic-tf ros-melodic-map-server ros-melodic-turtlebot3-navigation
+         sudo pip3 install rospkg
+         mkdir -p ~/.ros/log/
+      - name: Build catkin_ws
+        run: |
+         source /opt/ros/melodic/setup.bash
+         mkdir -p ~/catkin_ws/src
+         cd ~/catkin_ws/src
+         git clone -b "${GITHUB_REF#refs/heads/}" https://github.com/ryuichiueda/emcl.git
+         cd ../
+         catkin_make
+#      - name: Execute and Test
+#        run: |
+#         ~/catkin_ws/src/emcl/test/er_test.bash
