@@ -18,4 +18,4 @@ jobs:
          docker build -t test .
       - name: Reset test on Gazebo
         run: |
-         docker run -it test /bin/bash -c 'source ~/.bashrc && /catkin_ws/src/emcl/test/er_test.bash'
+         docker run test /bin/bash -c 'source ~/.bashrc && /catkin_ws/src/emcl/test/er_test.bash'
