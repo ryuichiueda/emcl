@@ -36,7 +36,6 @@ ParticleFilter::ParticleFilter(double x, double y, double t, int num,
 	processed_seq_ = -1;
 	scan_.range_min_ = laser_range_min;
 	scan_.range_max_ = laser_range_max;
-	ROS_INFO("RANG MAX: %f", scan_.range_max_);
 
 	alpha_ = 1.0;
 }
