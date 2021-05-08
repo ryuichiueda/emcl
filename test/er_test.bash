@@ -24,4 +24,4 @@ grep -A2 position:             |
 awk '/x:/{printf $2" "}/y:/{print $2}' |
 awk '{print $0}
      sqrt( ($1+2.0)^2 + ($2+0.5)^2 ) < 0.15 {print "OK";exit(0)}
-     NR==1000{print "TIMEOUT";exit(1)}END{exit(1)}'
+     NR==1000{print "TIMEOUT";exit(1)}'
