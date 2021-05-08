@@ -3,7 +3,8 @@
 killall roslaunch
 killall gzclient
 
-roslaunch emcl test.launch &> /dev/null &
+export TURTLEBOT3_MODEL=burger
+roslaunch emcl test.launch &
 
 sleep 15
 
