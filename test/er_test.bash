@@ -1,8 +1,7 @@
 #!/bin/bash -evx
 
 export TURTLEBOT3_MODEL=burger
-roslaunch emcl test.launch &
-
+xvfb-run --auto-servernum -s "-screen 0 1400x900x24" roslaunch emcl test.launch &
 sleep 15
 
 rostopic pub /initialpose geometry_msgs/PoseWithCovarianceStamped "header:
@@ -25,3 +24,9 @@ awk '/x:/{printf $2" "}/y:/{print $2}' |
 awk '{print $0}
      sqrt( ($1+2.0)^2 + ($2+0.5)^2 ) < 0.15 {print "OK";exit(0)}
      NR==1000{print "TIMEOUT";exit(1)}'
+
+RESULT=$?
+
+killall rosmaster &
+
+exit $RESULT
