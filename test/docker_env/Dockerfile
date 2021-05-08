@@ -4,7 +4,7 @@ SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update
 RUN apt-get install -y ros-melodic-desktop-full 
-RUN apt-get install -y ros-melodic-tf ros-melodic-tf2 ros-melodic-tf2-geometry-msgs ros-melodic-urdf ros-melodic-map-server xvfb vim psmisc
+RUN apt-get install -y ros-melodic-tf ros-melodic-tf2 ros-melodic-tf2-geometry-msgs ros-melodic-urdf ros-melodic-map-server xvfb vim psmisc ros-melodic-move-base* ros-melodic-dwa-local-planner ros-melodic-global-planner
 
 RUN cd /catkin_ws/src && \
     git clone https://github.com/ROBOTIS-GIT/turtlebot3.git && \
