@@ -94,7 +94,8 @@ The likelihoods on the field are normalized. The maximum value is 1.0. The alpha
 
 ## ROS version 
 
-* ROS Noetic Ninjemys (on Ubuntu 20.04 LTS)
+* ROS Noetic Ninjemys (on Ubuntu 20.04 LTS, test on my note PC)
+* ROS Melodic Morenia (on Ubuntu 18.04 LTS, test on GitHub Actions)
 
 ## citation
 
