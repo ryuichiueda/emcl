@@ -1,7 +1,4 @@
-#!/bin/bash
-
-killall roslaunch
-killall gzclient
+#!/bin/bash -evx
 
 export TURTLEBOT3_MODEL=burger
 roslaunch emcl test.launch &
@@ -27,11 +24,4 @@ grep -A2 position:             |
 awk '/x:/{printf $2" "}/y:/{print $2}' |
 awk '{print $0}
      sqrt( ($1+2.0)^2 + ($2+0.5)^2 ) < 0.15 {print "OK";exit(0)}
-     NR==1000{print "TIMEOUT";exit(1)}'
-
-RESULT=$?
-
-killall roslaunch
-killall gzclient
-
-exit $RESULT
+     NR==1000{print "TIMEOUT";exit(1)}END{exit(1)}'
