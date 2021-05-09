@@ -25,7 +25,7 @@ public:
 	std::vector<double> ranges_;
 
 	Scan& operator=(const Scan &s);
-	int countValidBeams(void);
+	int countValidBeams(double *percentage = NULL);
 	bool valid(double range);
 };
 

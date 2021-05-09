@@ -16,9 +16,9 @@ using namespace std;
 ParticleFilter::ParticleFilter(const Pose &p, int num, const Scan &scan,
 				const shared_ptr<OdomModel> &odom_model,
 				const shared_ptr<LikelihoodFieldMap> &map,
-				double alpha_th, double expansion_radius_position,
-				double expansion_radius_orientation)
-	: last_odom_(NULL), prev_odom_(NULL), alpha_threshold_(alpha_th),
+				double alpha_th, double open_space_th,
+				double expansion_radius_position, double expansion_radius_orientation)
+	: last_odom_(NULL), prev_odom_(NULL), alpha_threshold_(alpha_th), open_space_threshold_(open_space_th),
 	  expansion_radius_position_(expansion_radius_position),
 	  expansion_radius_orientation_(expansion_radius_orientation)
 {
@@ -90,7 +90,8 @@ void ParticleFilter::sensorUpdate(void)
 	for(auto e : scan.ranges_)
 		ranges.push_back(e);
 
-	int valid_beams = scan.countValidBeams();
+	double valid_pct = 0.0;
+	int valid_beams = scan.countValidBeams(&valid_pct);
 	if(valid_beams == 0)
 		return;
 
@@ -98,7 +99,7 @@ void ParticleFilter::sensorUpdate(void)
 		p.w_ *= p.likelihood(map_.get(), scan);
 
 	alpha_ = normalize()/valid_beams;
-	if(alpha_ < alpha_threshold_){
+	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
 		ROS_INFO("RESET");
 		expansionResetting();
 		for(auto &p : particles_)

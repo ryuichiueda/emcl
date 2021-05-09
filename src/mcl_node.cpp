@@ -67,14 +67,16 @@ void MclNode::initPF(void)
 	private_nh_.param("initial_pose_a", init_pose.t_, 0.0);
 
 	int num_particles;
-	double alpha_th;
+	double alpha_th, open_space_th;
 	double ex_rad_pos, ex_rad_ori;
 	private_nh_.param("num_particles", num_particles, 0);
 	private_nh_.param("alpha_threshold", alpha_th, 0.0);
+	private_nh_.param("open_space_threshold", open_space_th, 0.05);
 	private_nh_.param("expansion_radius_position", ex_rad_pos, 0.1);
 	private_nh_.param("expansion_radius_orientation", ex_rad_ori, 0.2);
 
-	pf_.reset(new ParticleFilter(init_pose, num_particles, scan, om, map, alpha_th, ex_rad_pos, ex_rad_ori));
+	pf_.reset(new ParticleFilter(init_pose, num_particles, scan, om, map,
+				alpha_th, open_space_th, ex_rad_pos, ex_rad_ori));
 }
 
 shared_ptr<OdomModel> MclNode::initOdometry(void)

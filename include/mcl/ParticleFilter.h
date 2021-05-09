@@ -27,8 +27,8 @@ public:
 	ParticleFilter(const Pose &p, int num, const Scan &scan,
 			const shared_ptr<OdomModel> &odom_model,
 			const shared_ptr<LikelihoodFieldMap> &map,
-			double alpha_th, double expansion_radius_position,
-			double expansion_radius_orientation);
+			double alpha_th, double open_space_th,
+			double expansion_radius_position, double expansion_radius_orientation);
 	~ParticleFilter();
 
 	vector<Particle> particles_;
@@ -59,6 +59,7 @@ private:
 	shared_ptr<LikelihoodFieldMap> map_;
 
 	double alpha_threshold_;
+	double open_space_threshold_;
 	double expansion_radius_position_;
 	double expansion_radius_orientation_;
 
