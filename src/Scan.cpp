@@ -30,15 +30,15 @@ Scan& Scan::operator=(const Scan &s)
 	return *this;
 }
 
-int Scan::countValidBeams(double *percentage)
+int Scan::countValidBeams(double *rate)
 {
 	int ans = 0;
 	for(int i=0; i<ranges_.size(); i+=scan_increment_)
 		if(valid(ranges_[i]))
 			ans++;
 
-	if(percentage != NULL)
-		*percentage = (double)ans/ranges_.size()*scan_increment_;
+	if(rate != NULL)
+		*rate = (double)ans/ranges_.size()*scan_increment_;
 
 	return ans;
 }

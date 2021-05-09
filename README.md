@@ -75,7 +75,7 @@ This node transforms laser scans and odometry transform messages to pose estimat
 * ~alpha_threshold (double, default: 0.0)
     * threshold of the alpha value for expansion resetting
 * ~open_space_threshold (double, default: 0.05)
-    * threshold of the valid beam percentage for expansion resetting; the reset doesn't occur when the percentage of beams in the valid range is smaller than this value
+    * threshold of the valid beam rate for expansion resetting; the reset doesn't occur when the rate of beams in the valid range is smaller than this threshold
 * ~expansion_radius_position (double, default: 0.1)
     * maximum change of the position on the xy-plane when the reset replaces a particle
 * ~expansion_radius_orientation (double, default: 0.2)
