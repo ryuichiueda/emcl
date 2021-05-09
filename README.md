@@ -1,5 +1,7 @@
 # emcl: mcl with expansion resetting
 
+![test](https://github.com/ryuichiueda/emcl/actions/workflows/test.yml/badge.svg)
+
 emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wiki.ros.org/amcl). Differently from amcl, KLD-sampling and adaptive MCL are not implemented. Instead, the expansion resetting is implemented[^1].
 
 ## expansion resetting
