@@ -1,4 +1,4 @@
-name: emcl_test
+name: build and run
 
 on:
   push:
