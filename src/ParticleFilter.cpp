@@ -13,8 +13,7 @@
 #include <cmath>
 using namespace std;
 
-ParticleFilter::ParticleFilter(double x, double y, double t, int num, 
-				double laser_range_min, double laser_range_max,
+ParticleFilter::ParticleFilter(const Pose &p, int num, const Scan &scan,
 				const shared_ptr<OdomModel> &odom_model,
 				const shared_ptr<LikelihoodFieldMap> &map,
 				double alpha_th, double expansion_radius_position,
@@ -25,18 +24,16 @@ ParticleFilter::ParticleFilter(double x, double y, double t, int num,
 {
 	odom_model_ = move(odom_model);
 	map_ = move(map);
+	scan_ = scan;
 
 	if(num <= 0)
 		ROS_ERROR("NO PARTICLE");
 
-	Particle p(x, y, t, 1.0/num);
+	Particle particle(p.x_, p.y_, p.t_, 1.0/num);
 	for(int i=0; i<num; i++)
-		particles_.push_back(p);
+		particles_.push_back(particle);
 
 	processed_seq_ = -1;
-	scan_.range_min_ = laser_range_min;
-	scan_.range_max_ = laser_range_max;
-
 	alpha_ = 1.0;
 }
 

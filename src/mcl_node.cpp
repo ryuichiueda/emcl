@@ -12,6 +12,7 @@
 #include "geometry_msgs/PoseArray.h"
 #include "nav_msgs/GetMap.h"
 #include "std_msgs/Float32.h"
+#include "mcl/Pose.h"
 using namespace std;
 
 MclNode::MclNode() : private_nh_("~") 
@@ -52,30 +53,27 @@ void MclNode::initTF(void)
 
 void MclNode::initPF(void)
 {
-	double x, y, t;
-	private_nh_.param("initial_pose_x", x, 0.0);
-	private_nh_.param("initial_pose_y", y, 0.0);
-	private_nh_.param("initial_pose_a", t, 0.0);
-
-	int num;
-	private_nh_.param("num_particles", num, 0);
-
-	double alpha_th;
-	private_nh_.param("alpha_threshold", alpha_th, 0.0);
-
 	shared_ptr<LikelihoodFieldMap> map = move(initMap());
 	shared_ptr<OdomModel> om = move(initOdometry());
 
+	Scan scan;
+	private_nh_.param("laser_min_range", scan.range_min_, 0.0);
+	private_nh_.param("laser_max_range", scan.range_max_, 100000000.0);
+
+	Pose pose;
+	private_nh_.param("initial_pose_x", pose.x_, 0.0);
+	private_nh_.param("initial_pose_y", pose.y_, 0.0);
+	private_nh_.param("initial_pose_a", pose.t_, 0.0);
+
+	int num;
+	double alpha_th;
 	double ex_rad_pos, ex_rad_ori;
+	private_nh_.param("num_particles", num, 0);
+	private_nh_.param("alpha_threshold", alpha_th, 0.0);
 	private_nh_.param("expansion_radius_position", ex_rad_pos, 0.1);
 	private_nh_.param("expansion_radius_orientation", ex_rad_ori, 0.2);
 
-	double laser_min, laser_max;
-	private_nh_.param("laser_min_range", laser_min, 0.0);
-	private_nh_.param("laser_max_range", laser_max, 100000000.0);
-
-	pf_.reset(new ParticleFilter(x, y, t, num, laser_min, laser_max,
-					om, map, alpha_th, ex_rad_pos, ex_rad_ori));
+	pf_.reset(new ParticleFilter(pose, num, scan, om, map, alpha_th, ex_rad_pos, ex_rad_ori));
 }
 
 shared_ptr<OdomModel> MclNode::initOdometry(void)

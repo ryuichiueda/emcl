@@ -24,8 +24,7 @@ using namespace std;
 class ParticleFilter
 {
 public: 
-	ParticleFilter(double x, double y, double t, int num,
-			double laser_range_min, double laser_range_max,
+	ParticleFilter(const Pose &p, int num, const Scan &scan,
 			const shared_ptr<OdomModel> &odom_model,
 			const shared_ptr<LikelihoodFieldMap> &map,
 			double alpha_th, double expansion_radius_position,

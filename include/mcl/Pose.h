@@ -16,6 +16,7 @@ using namespace std;
 class Pose
 {
 public:
+	Pose(){}
 	Pose(double x, double y, double t);
 
 	void set(double x, double y, double t);
