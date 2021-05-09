@@ -31,7 +31,7 @@ LikelihoodFieldMap::LikelihoodFieldMap(const nav_msgs::OccupancyGrid &map, doubl
 			if(map.data[x + y*width_] > 50)
 				setLikelihood(x, y, likelihood_range);
 
-	normalize(); //normalize for publish of this likelihood map
+	normalize();
 }
 
 LikelihoodFieldMap::~LikelihoodFieldMap()

@@ -15,6 +15,7 @@ class Scan
 {
 public: 
 	int seq_;
+	int scan_increment_;
 	double angle_max_;
 	double angle_min_;
 	double angle_increment_;

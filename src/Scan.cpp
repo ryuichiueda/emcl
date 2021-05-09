@@ -16,6 +16,7 @@ Scan& Scan::operator=(const Scan &s)
 		return *this;
 
 	seq_ = s.seq_;
+	scan_increment_ = s.scan_increment_;
 	angle_max_ = s.angle_max_;
 	angle_min_ = s.angle_min_;
 	angle_increment_ = s.angle_increment_;
@@ -32,8 +33,8 @@ Scan& Scan::operator=(const Scan &s)
 int Scan::countValidBeams(void)
 {
 	int ans = 0;
-	for(auto r : ranges_)
-		if(valid(r))
+	for(int i=0; i<ranges_.size(); i+=scan_increment_)
+		if(valid(ranges_[i]))
 			ans++;
 
 	return ans;

@@ -59,21 +59,22 @@ void MclNode::initPF(void)
 	Scan scan;
 	private_nh_.param("laser_min_range", scan.range_min_, 0.0);
 	private_nh_.param("laser_max_range", scan.range_max_, 100000000.0);
+	private_nh_.param("scan_increment", scan.scan_increment_, 1);
 
-	Pose pose;
-	private_nh_.param("initial_pose_x", pose.x_, 0.0);
-	private_nh_.param("initial_pose_y", pose.y_, 0.0);
-	private_nh_.param("initial_pose_a", pose.t_, 0.0);
+	Pose init_pose;
+	private_nh_.param("initial_pose_x", init_pose.x_, 0.0);
+	private_nh_.param("initial_pose_y", init_pose.y_, 0.0);
+	private_nh_.param("initial_pose_a", init_pose.t_, 0.0);
 
-	int num;
+	int num_particles;
 	double alpha_th;
 	double ex_rad_pos, ex_rad_ori;
-	private_nh_.param("num_particles", num, 0);
+	private_nh_.param("num_particles", num_particles, 0);
 	private_nh_.param("alpha_threshold", alpha_th, 0.0);
 	private_nh_.param("expansion_radius_position", ex_rad_pos, 0.1);
 	private_nh_.param("expansion_radius_orientation", ex_rad_ori, 0.2);
 
-	pf_.reset(new ParticleFilter(pose, num, scan, om, map, alpha_th, ex_rad_pos, ex_rad_ori));
+	pf_.reset(new ParticleFilter(init_pose, num_particles, scan, om, map, alpha_th, ex_rad_pos, ex_rad_ori));
 }
 
 shared_ptr<OdomModel> MclNode::initOdometry(void)

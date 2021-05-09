@@ -18,7 +18,7 @@ Particle::Particle(double x, double y, double t, double w) : p_(x, y, t)
 double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 {
 	double ans = 0.0;
-	for(int i=0;i<scan.ranges_.size();i++){
+	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
 		if(not scan.valid(scan.ranges_[i]))
 			continue;
 

@@ -76,6 +76,8 @@ This node transforms laser scans and odometry transform messages to pose estimat
     * maximum change of the position on the xy-plane when the reset replaces a particle
 * ~expansion_radius_orientation (double, default: 0.2)
     * maximum change of the yaw angle when the reset replaces a particle
+* ~scan_increment (int, default: 1)
+    * increment number when beams are picked from their sequence; the larger this number is, the fewer number of beams are used for calculation of likelihood. 
 
 #### Parameters to be available
 
