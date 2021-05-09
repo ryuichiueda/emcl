@@ -43,6 +43,8 @@ public:
 	void meanPose(double &x_mean, double &y_mean, double &t_mean,
 			double &x_var, double &y_var, double &t_var,
 			double &xy_cov, double &yt_cov, double &tx_cov);
+
+	void simpleReset(void);
 private:
 	Pose *last_odom_;
 	Pose *prev_odom_;
@@ -63,7 +65,7 @@ private:
 	double expansion_radius_position_;
 	double expansion_radius_orientation_;
 
-	void expansionResetting(void);
+	void expansionReset(void);
 };
 
 #endif

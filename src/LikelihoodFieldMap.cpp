@@ -7,6 +7,9 @@
  */
 
 #include "mcl/LikelihoodFieldMap.h"
+#include <random>
+#include <algorithm>
+#include "mcl/Pose.h"
 using namespace std;
 
 LikelihoodFieldMap::LikelihoodFieldMap(const nav_msgs::OccupancyGrid &map, double likelihood_range)
@@ -27,17 +30,21 @@ LikelihoodFieldMap::LikelihoodFieldMap(const nav_msgs::OccupancyGrid &map, doubl
 	}
 
 	for(int x=0; x<width_; x++)
-		for(int y=0; y<height_; y++)
-			if(map.data[x + y*width_] > 50)
+		for(int y=0; y<height_; y++){
+			int v = map.data[x + y*width_];
+			if(v > 50)
 				setLikelihood(x, y, likelihood_range);
+			else if(0 <= v and v <= 50)
+				free_cells_.push_back(pair<int, int>(x,y));
+		}
 
 	normalize();
 }
 
 LikelihoodFieldMap::~LikelihoodFieldMap()
 {
-	for(auto &c : likelihoods_)
-		delete [] c;
+	for(auto &e : likelihoods_)
+		delete [] e;
 }
 
 
@@ -77,3 +84,19 @@ void LikelihoodFieldMap::normalize(void)
 			likelihoods_[x][y] /= maximum;
 }
 
+void LikelihoodFieldMap::drawFreePoses(int num, vector<Pose> &result)
+{
+	random_device seed_gen;
+	mt19937 engine{seed_gen()};
+	vector<pair<int, int> > chosen_cells;
+	
+	sample(free_cells_.begin(), free_cells_.end(), back_inserter(chosen_cells), num, engine);
+
+	for(auto &c : chosen_cells){
+		Pose p;
+		p.x_ = c.first*resolution_ + resolution_*rand()/RAND_MAX + origin_x_;
+		p.y_ = c.second*resolution_ + resolution_*rand()/RAND_MAX + origin_y_;
+		p.t_ = 2*M_PI*rand()/RAND_MAX - M_PI;
+		result.push_back(p);
+	}
+}

@@ -17,20 +17,20 @@ using namespace std;
 
 MclNode::MclNode() : private_nh_("~") 
 {
-	initTF();
+	initCommunication();
 	initPF();
-	initTopic();
 
 	private_nh_.param("odom_freq", odom_freq_, 20);
 
 	init_request_ = false;
+	simple_reset_request_ = false;
 }
 
 MclNode::~MclNode()
 {
 }
 
-void MclNode::initTopic(void)
+void MclNode::initCommunication(void)
 {
 	particlecloud_pub_ = nh_.advertise<geometry_msgs::PoseArray>("particlecloud", 2, true);
 	pose_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("mcl_pose", 2, true);
@@ -38,10 +38,8 @@ void MclNode::initTopic(void)
 	laser_scan_sub_ = nh_.subscribe("scan", 2, &MclNode::cbScan, this);
 	initial_pose_sub_ = nh_.subscribe("initialpose", 2, &MclNode::initialPoseReceived, this);
 
-}
+	global_loc_srv_ = nh_.advertiseService("global_localization", &MclNode::cbSimpleReset, this);
 
-void MclNode::initTF(void)
-{
 	private_nh_.param("global_frame_id", global_frame_id_, string("map"));
 	private_nh_.param("base_frame_id", base_frame_id_, string("base_footprint"));
 	private_nh_.param("odom_frame_id", odom_frame_id_, string("odom"));
@@ -127,6 +125,10 @@ void MclNode::loop(void)
 	if(init_request_){
 		pf_->initialize(init_x_, init_y_, init_t_);
 		init_request_ = false;
+	}
+	else if(simple_reset_request_){
+		pf_->simpleReset();
+		simple_reset_request_ = false;
 	}
 
 	double x, y, t;
@@ -252,6 +254,11 @@ int MclNode::getOdomFreq(void){
 	return odom_freq_;
 }
 
+bool MclNode::cbSimpleReset(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+{
+	return simple_reset_request_ = true;
+}
+
 int main(int argc, char **argv)
 {
 
@@ -269,3 +276,4 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+

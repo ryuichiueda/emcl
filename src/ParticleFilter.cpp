@@ -101,7 +101,7 @@ void ParticleFilter::sensorUpdate(void)
 	alpha_ = normalize()/valid_beams;
 	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
 		ROS_INFO("RESET");
-		expansionResetting();
+		expansionReset();
 		for(auto &p : particles_)
 			p.w_ *= p.likelihood(map_.get(), scan);
 	}
@@ -242,7 +242,7 @@ void ParticleFilter::initialize(double x, double y, double t)
 	resetWeight();
 }
 
-void ParticleFilter::expansionResetting(void)
+void ParticleFilter::expansionReset(void)
 {
 	for(auto &p : particles_){
 		double length = 2*((double)rand()/RAND_MAX - 0.5)*expansion_radius_position_;
@@ -252,5 +252,16 @@ void ParticleFilter::expansionResetting(void)
 		p.p_.y_ += length*sin(direction);
 		p.p_.t_ += 2*((double)rand()/RAND_MAX - 0.5)*expansion_radius_orientation_;
 		p.w_ = 1.0/particles_.size();
+	}
+}
+
+void ParticleFilter::simpleReset(void)
+{
+	vector<Pose> poses;
+	map_->drawFreePoses(particles_.size(), poses);
+
+	for(int i=0; i<poses.size(); i++){
+		particles_[i].p_ = poses[i];
+		particles_[i].w_ = 1.0/particles_.size();
 	}
 }

@@ -42,7 +42,9 @@ This node transforms laser scans and odometry transform messages to pose estimat
 #### Services Called
 
 * static_map ([nav_msgs/GetMap](http://docs.ros.org/en/api/nav_msgs/html/srv/GetMap.html))
-    * mcl initializes the map for localization
+    * Initiate the map for localization.
+* global_localization ([std_srvs/Empty](http://docs.ros.org/en/api/std_srvs/html/srv/Empty.html))
+    * Initiate global localization, wherein all particles are dispersed randomly through the free space in the map.
 
 #### Parameters
 
