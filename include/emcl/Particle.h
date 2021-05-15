@@ -9,8 +9,11 @@
 #ifndef PARTICLE_H__
 #define PARTICLE_H__
 
-#include "mcl/Pose.h"
-#include "mcl/LikelihoodFieldMap.h"
+#include "emcl/Pose.h"
+#include "emcl/LikelihoodFieldMap.h"
+
+namespace emcl {
+
 using namespace std;
 
 class Particle
@@ -24,5 +27,7 @@ public:
 
 	Particle operator =(const Particle &p);
 };
+
+}
 
 #endif

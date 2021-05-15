@@ -6,8 +6,11 @@
  *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
  */
 
-#include "mcl/Particle.h"
+#include "emcl/Particle.h"
 #include <cmath>
+
+namespace emcl {
+
 using namespace std;
 
 Particle::Particle(double x, double y, double t, double w) : p_(x, y, t)
@@ -36,4 +39,6 @@ Particle Particle::operator =(const Particle &p)
 	p_ = p.p_;
 	w_ = p.w_;
 	return *this;
+}
+
 }

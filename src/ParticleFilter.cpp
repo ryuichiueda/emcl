@@ -6,11 +6,14 @@
  *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
  */
 
-#include "mcl/ParticleFilter.h"
+#include "emcl/ParticleFilter.h"
 #include <ros/ros.h>
 #include <iostream>
 #include <stdlib.h>
 #include <cmath>
+
+namespace emcl {
+
 using namespace std;
 
 ParticleFilter::ParticleFilter(const Pose &p, int num, const Scan &scan,
@@ -264,4 +267,6 @@ void ParticleFilter::simpleReset(void)
 		particles_[i].p_ = poses[i];
 		particles_[i].w_ = 1.0/particles_.size();
 	}
+}
+
 }

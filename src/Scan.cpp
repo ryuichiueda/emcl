@@ -6,8 +6,11 @@
  *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
  */
 
-#include "mcl/Scan.h"
+#include "emcl/Scan.h"
 #include <cmath>
+
+namespace emcl {
+
 using namespace std;
 
 Scan& Scan::operator=(const Scan &s)
@@ -49,4 +52,6 @@ bool Scan::valid(double range)
 		return false;
 
 	return range_min_ <= range and range <= range_max_;
+}
+
 }

@@ -6,9 +6,12 @@
  *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
  */
 
-#include "mcl/Pose.h"
+#include "emcl/Pose.h"
 #include <sstream>
 #include <cmath>
+
+namespace emcl {
+
 using namespace std;
 
 Pose::Pose(double x, double y, double t)
@@ -73,4 +76,6 @@ void Pose::move(double length, double direction, double rotation,
 bool Pose::nearlyZero(void)
 {
 	return fabs(x_) < 0.001 and fabs(y_) < 0.001 and fabs(t_) < 0.001;
+}
+
 }

@@ -11,6 +11,8 @@
 
 #include <sstream>
 
+namespace emcl {
+
 using namespace std;
 
 class Pose
@@ -34,5 +36,7 @@ public:
 
 	double x_, y_, t_;
 };
+
+}
 
 #endif

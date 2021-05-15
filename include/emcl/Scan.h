@@ -11,6 +11,8 @@
 
 #include <vector>
 
+namespace emcl {
+
 class Scan
 {
 public: 
@@ -28,5 +30,7 @@ public:
 	int countValidBeams(double *rate = NULL);
 	bool valid(double range);
 };
+
+}
 
 #endif

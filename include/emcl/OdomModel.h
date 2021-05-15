@@ -11,6 +11,8 @@
 
 #include <random>
 
+namespace emcl {
+
 using namespace std;
 
 class OdomModel
@@ -34,5 +36,7 @@ private:
 	std::random_device seed_gen_;
 	std::default_random_engine engine_;
 };
+
+}
 
 #endif

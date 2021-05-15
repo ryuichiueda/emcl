@@ -11,7 +11,7 @@
 #define INTERFACE_H__
 
 #include <ros/ros.h>
-#include "mcl/ParticleFilter.h"
+#include "emcl/ParticleFilter.h"
 
 #include "tf2_ros/transform_broadcaster.h"
 #include "tf2_ros/transform_listener.h"
@@ -21,6 +21,8 @@
 #include "sensor_msgs/LaserScan.h"
 #include "geometry_msgs/PoseWithCovarianceStamped.h"
 #include "std_srvs/Empty.h"
+
+namespace emcl {
 
 class MclNode
 {
@@ -75,5 +77,7 @@ private:
 	bool cbSimpleReset(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
 	void initialPoseReceived(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg);
 };
+
+}
 
 #endif

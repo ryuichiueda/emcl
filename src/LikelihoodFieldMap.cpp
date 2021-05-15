@@ -6,10 +6,13 @@
  *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
  */
 
-#include "mcl/LikelihoodFieldMap.h"
+#include "emcl/LikelihoodFieldMap.h"
+#include "emcl/Pose.h"
 #include <random>
 #include <algorithm>
-#include "mcl/Pose.h"
+
+namespace emcl {
+
 using namespace std;
 
 LikelihoodFieldMap::LikelihoodFieldMap(const nav_msgs::OccupancyGrid &map, double likelihood_range)
@@ -99,4 +102,6 @@ void LikelihoodFieldMap::drawFreePoses(int num, vector<Pose> &result)
 		p.t_ = 2*M_PI*rand()/RAND_MAX - M_PI;
 		result.push_back(p);
 	}
+}
+
 }

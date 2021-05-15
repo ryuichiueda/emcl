@@ -13,12 +13,15 @@
 #include <sstream>
 #include <random>
 
-#include "mcl/Particle.h"
-#include "mcl/OdomModel.h"
+#include "emcl/Particle.h"
+#include "emcl/OdomModel.h"
+#include "emcl/LikelihoodFieldMap.h"
 
 #include "nav_msgs/OccupancyGrid.h"
 #include "sensor_msgs/LaserScan.h"
-#include "mcl/LikelihoodFieldMap.h"
+
+namespace emcl {
+
 using namespace std;
 
 class ParticleFilter
@@ -67,5 +70,7 @@ private:
 
 	void expansionReset(void);
 };
+
+}
 
 #endif

@@ -6,11 +6,14 @@
  *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
  */
 
-#include "mcl/OdomModel.h"
+#include "emcl/OdomModel.h"
 #include <ros/ros.h>
 #include <iostream>
 #include <stdlib.h>
 #include <cmath>
+
+namespace emcl {
+
 using namespace std;
 
 OdomModel::OdomModel(double ff, double fr, double rf, double rr) 
@@ -36,4 +39,6 @@ double OdomModel::drawFwNoise(void)
 double OdomModel::drawRotNoise(void)
 {
 	return std_norm_dist_(engine_) * rot_dev_;
+}
+
 }

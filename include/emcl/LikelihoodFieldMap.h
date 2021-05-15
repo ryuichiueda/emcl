@@ -11,9 +11,12 @@
 
 #include <vector>
 #include <utility>
-#include "mcl/Scan.h"
+#include "emcl/Scan.h"
+#include "emcl/Pose.h"
 #include "nav_msgs/OccupancyGrid.h"
-#include "mcl/Pose.h"
+
+namespace emcl {
+
 using namespace std;
 
 class LikelihoodFieldMap
@@ -40,4 +43,7 @@ private:
 	void normalize(void);
 };
 
+}
+
 #endif
+

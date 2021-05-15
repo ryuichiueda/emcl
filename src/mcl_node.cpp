@@ -6,13 +6,16 @@
  *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
  */
 
-#include "mcl/mcl_node.h"
+#include "emcl/mcl_node.h"
+#include "emcl/Pose.h"
 
 #include "tf2/utils.h"
 #include "geometry_msgs/PoseArray.h"
 #include "nav_msgs/GetMap.h"
 #include "std_msgs/Float32.h"
-#include "mcl/Pose.h"
+
+namespace emcl {
+
 using namespace std;
 
 MclNode::MclNode() : private_nh_("~") 
@@ -259,11 +262,13 @@ bool MclNode::cbSimpleReset(std_srvs::Empty::Request& req, std_srvs::Empty::Resp
 	return simple_reset_request_ = true;
 }
 
+}
+
 int main(int argc, char **argv)
 {
 
 	ros::init(argc, argv, "mcl_node");
-	MclNode node;
+	emcl::MclNode node;
 
 	ros::Rate loop_rate(node.getOdomFreq());
 	while (ros::ok()){
