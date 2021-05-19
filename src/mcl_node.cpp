@@ -16,8 +16,6 @@
 
 namespace emcl {
 
-using namespace std;
-
 MclNode::MclNode() : private_nh_("~") 
 {
 	initCommunication();
@@ -43,9 +41,9 @@ void MclNode::initCommunication(void)
 
 	global_loc_srv_ = nh_.advertiseService("global_localization", &MclNode::cbSimpleReset, this);
 
-	private_nh_.param("global_frame_id", global_frame_id_, string("map"));
-	private_nh_.param("base_frame_id", base_frame_id_, string("base_footprint"));
-	private_nh_.param("odom_frame_id", odom_frame_id_, string("odom"));
+	private_nh_.param("global_frame_id", global_frame_id_, std::string("map"));
+	private_nh_.param("base_frame_id", base_frame_id_, std::string("base_footprint"));
+	private_nh_.param("odom_frame_id", odom_frame_id_, std::string("odom"));
 
 	tfb_.reset(new tf2_ros::TransformBroadcaster());
 	tf_.reset(new tf2_ros::Buffer());
@@ -54,8 +52,8 @@ void MclNode::initCommunication(void)
 
 void MclNode::initPF(void)
 {
-	shared_ptr<LikelihoodFieldMap> map = move(initMap());
-	shared_ptr<OdomModel> om = move(initOdometry());
+	std::shared_ptr<LikelihoodFieldMap> map = std::move(initMap());
+	std::shared_ptr<OdomModel> om = std::move(initOdometry());
 
 	Scan scan;
 	private_nh_.param("laser_min_range", scan.range_min_, 0.0);
@@ -80,17 +78,17 @@ void MclNode::initPF(void)
 				alpha_th, open_space_th, ex_rad_pos, ex_rad_ori));
 }
 
-shared_ptr<OdomModel> MclNode::initOdometry(void)
+std::shared_ptr<OdomModel> MclNode::initOdometry(void)
 {
 	double ff, fr, rf, rr;
 	private_nh_.param("odom_fw_dev_per_fw", ff, 0.19);
 	private_nh_.param("odom_fw_dev_per_rot", fr, 0.0001);
 	private_nh_.param("odom_rot_dev_per_fw", rf, 0.13);
 	private_nh_.param("odom_rot_dev_per_rot", rr, 0.2);
-	return shared_ptr<OdomModel>(new OdomModel(ff, fr, rf, rr));
+	return std::shared_ptr<OdomModel>(new OdomModel(ff, fr, rf, rr));
 }
 
-shared_ptr<LikelihoodFieldMap> MclNode::initMap(void)
+std::shared_ptr<LikelihoodFieldMap> MclNode::initMap(void)
 {
 	double likelihood_range;
 	private_nh_.param("laser_likelihood_max_dist", likelihood_range, 0.2);
@@ -107,7 +105,7 @@ shared_ptr<LikelihoodFieldMap> MclNode::initMap(void)
 		d.sleep();
 	}
 
-	return shared_ptr<LikelihoodFieldMap>(new LikelihoodFieldMap(resp.map, likelihood_range));
+	return std::shared_ptr<LikelihoodFieldMap>(new LikelihoodFieldMap(resp.map, likelihood_range));
 }
 
 void MclNode::cbScan(const sensor_msgs::LaserScan::ConstPtr &msg)

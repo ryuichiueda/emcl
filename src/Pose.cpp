@@ -12,8 +12,6 @@
 
 namespace emcl {
 
-using namespace std;
-
 Pose::Pose(double x, double y, double t)
 {
 	set(x, y, t);
@@ -33,9 +31,9 @@ void Pose::set(const Pose &p)
 	t_ = p.t_;
 }
 
-string Pose::to_s(void)
+std::string Pose::to_s(void)
 {
-	stringstream s;
+	std::stringstream s;
 	s << "x:" << x_ << "\ty:" << y_ << "\tt:" << t_;
 	return s.str();
 }

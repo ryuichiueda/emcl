@@ -13,8 +13,6 @@
 
 namespace emcl {
 
-using namespace std;
-
 class Pose
 {
 public:
@@ -23,7 +21,7 @@ public:
 
 	void set(double x, double y, double t);
 	void set(const Pose &p);
-	string to_s(void);
+	std::string to_s(void);
 
 	void normalizeAngle(void);
 	void move(double length, double direction, double rotation,

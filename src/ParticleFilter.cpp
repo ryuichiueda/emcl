@@ -14,11 +14,9 @@
 
 namespace emcl {
 
-using namespace std;
-
 ParticleFilter::ParticleFilter(const Pose &p, int num, const Scan &scan,
-				const shared_ptr<OdomModel> &odom_model,
-				const shared_ptr<LikelihoodFieldMap> &map,
+				const std::shared_ptr<OdomModel> &odom_model,
+				const std::shared_ptr<LikelihoodFieldMap> &map,
 				double alpha_th, double open_space_th,
 				double expansion_radius_position, double expansion_radius_orientation)
 	: last_odom_(NULL), prev_odom_(NULL), alpha_threshold_(alpha_th), open_space_threshold_(open_space_th),
@@ -48,18 +46,18 @@ ParticleFilter::~ParticleFilter()
 
 void ParticleFilter::resampling(void)
 {
-	vector<double> accum;
+	std::vector<double> accum;
 	accum.push_back(particles_[0].w_);
 	for(int i=1;i<particles_.size();i++){
 		accum.push_back(accum.back() + particles_[i].w_);
 	}
 
-	vector<Particle> old(particles_);
+	std::vector<Particle> old(particles_);
 
 	double start = (double)rand()/(RAND_MAX * particles_.size());
 	double step = 1.0/particles_.size();
 
-	vector<int> chosen;
+	std::vector<int> chosen;
 
 	int tick = 0;
 	for(int i=0; i<particles_.size(); i++){
@@ -89,7 +87,7 @@ void ParticleFilter::sensorUpdate(void)
 		scan = scan_;
 	}
 
-	vector<double> ranges;
+	std::vector<double> ranges;
 	for(auto e : scan.ranges_)
 		ranges.push_back(e);
 
@@ -260,7 +258,7 @@ void ParticleFilter::expansionReset(void)
 
 void ParticleFilter::simpleReset(void)
 {
-	vector<Pose> poses;
+	std::vector<Pose> poses;
 	map_->drawFreePoses(particles_.size(), poses);
 
 	for(int i=0; i<poses.size(); i++){

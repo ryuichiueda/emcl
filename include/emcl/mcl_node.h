@@ -70,8 +70,8 @@ private:
 
 	void initCommunication(void);
 	void initPF(void);
-	shared_ptr<LikelihoodFieldMap> initMap(void);
-	shared_ptr<OdomModel> initOdometry(void);
+	std::shared_ptr<LikelihoodFieldMap> initMap(void);
+	std::shared_ptr<OdomModel> initOdometry(void);
 
 	void cbScan(const sensor_msgs::LaserScan::ConstPtr &msg);
 	bool cbSimpleReset(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);

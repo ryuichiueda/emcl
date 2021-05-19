@@ -11,8 +11,6 @@
 
 namespace emcl {
 
-using namespace std;
-
 Scan& Scan::operator=(const Scan &s)
 {
 	if(this == &s)
@@ -48,7 +46,7 @@ int Scan::countValidBeams(double *rate)
 
 bool Scan::valid(double range)
 {
-	if( isnan(range) or isinf(range) )
+	if( std::isnan(range) or std::isinf(range) )
 		return false;
 
 	return range_min_ <= range and range <= range_max_;

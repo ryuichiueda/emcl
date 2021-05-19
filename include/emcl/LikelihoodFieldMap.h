@@ -17,8 +17,6 @@
 
 namespace emcl {
 
-using namespace std;
-
 class LikelihoodFieldMap
 {
 public: 
@@ -28,7 +26,7 @@ public:
 	void setLikelihood(int x, int y, double range);
 	double likelihood(double x, double y);
 
-	vector<double *> likelihoods_;
+	std::vector<double *> likelihoods_;
 	int width_;
 	int height_;
 
@@ -36,9 +34,9 @@ public:
 	double origin_x_;
 	double origin_y_;
 
-	void drawFreePoses(int num, vector<Pose> &result);
+	void drawFreePoses(int num, std::vector<Pose> &result);
 private:
-	vector<pair<int, int> > free_cells_;
+	std::vector<std::pair<int, int> > free_cells_;
 
 	void normalize(void);
 };

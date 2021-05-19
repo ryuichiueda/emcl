@@ -11,7 +11,7 @@
 
 namespace emcl {
 
-using namespace std;
+
 
 Particle::Particle(double x, double y, double t, double w) : p_(x, y, t)
 {

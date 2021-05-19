@@ -22,19 +22,17 @@
 
 namespace emcl {
 
-using namespace std;
-
 class ParticleFilter
 {
 public: 
 	ParticleFilter(const Pose &p, int num, const Scan &scan,
-			const shared_ptr<OdomModel> &odom_model,
-			const shared_ptr<LikelihoodFieldMap> &map,
+			const std::shared_ptr<OdomModel> &odom_model,
+			const std::shared_ptr<LikelihoodFieldMap> &map,
 			double alpha_th, double open_space_th,
 			double expansion_radius_position, double expansion_radius_orientation);
 	~ParticleFilter();
 
-	vector<Particle> particles_;
+	std::vector<Particle> particles_;
 	double alpha_;
 
 	void sensorUpdate(void);
@@ -60,8 +58,8 @@ private:
 	double normalize(void);
 	void resetWeight(void);
 
-	shared_ptr<OdomModel> odom_model_;
-	shared_ptr<LikelihoodFieldMap> map_;
+	std::shared_ptr<OdomModel> odom_model_;
+	std::shared_ptr<LikelihoodFieldMap> map_;
 
 	double alpha_threshold_;
 	double open_space_threshold_;

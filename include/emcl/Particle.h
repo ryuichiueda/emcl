@@ -14,7 +14,7 @@
 
 namespace emcl {
 
-using namespace std;
+
 
 class Particle
 {

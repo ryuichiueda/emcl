@@ -13,8 +13,6 @@
 
 namespace emcl {
 
-using namespace std;
-
 LikelihoodFieldMap::LikelihoodFieldMap(const nav_msgs::OccupancyGrid &map, double likelihood_range)
 {
 	width_ = map.info.width;
@@ -38,7 +36,7 @@ LikelihoodFieldMap::LikelihoodFieldMap(const nav_msgs::OccupancyGrid &map, doubl
 			if(v > 50)
 				setLikelihood(x, y, likelihood_range);
 			else if(0 <= v and v <= 50)
-				free_cells_.push_back(pair<int, int>(x,y));
+				free_cells_.push_back(std::pair<int, int>(x,y));
 		}
 
 	normalize();
@@ -65,14 +63,14 @@ double LikelihoodFieldMap::likelihood(double x, double y)
 void LikelihoodFieldMap::setLikelihood(int x, int y, double range)
 {
 	int cell_num = (int)ceil(range/resolution_);
-	vector<double> weights;
+	std::vector<double> weights;
 	for(int i=0;i<=cell_num;i++)
 		weights.push_back(1.0 - (double)i/cell_num);
 
 	for(int i=-cell_num; i<=cell_num; i++)
 		for(int j=-cell_num; j<=cell_num; j++)
-			likelihoods_[i+x][j+y] = max(likelihoods_[i+x][j+y], 
-			                         min(weights[abs(i)], weights[abs(j)]));
+			likelihoods_[i+x][j+y] = std::max(likelihoods_[i+x][j+y], 
+			                         std::min(weights[abs(i)], weights[abs(j)]));
 }
 
 void LikelihoodFieldMap::normalize(void)
@@ -87,11 +85,11 @@ void LikelihoodFieldMap::normalize(void)
 			likelihoods_[x][y] /= maximum;
 }
 
-void LikelihoodFieldMap::drawFreePoses(int num, vector<Pose> &result)
+void LikelihoodFieldMap::drawFreePoses(int num, std::vector<Pose> &result)
 {
-	random_device seed_gen;
-	mt19937 engine{seed_gen()};
-	vector<pair<int, int> > chosen_cells;
+	std::random_device seed_gen;
+	std::mt19937 engine{seed_gen()};
+	std::vector<std::pair<int, int> > chosen_cells;
 	
 	sample(free_cells_.begin(), free_cells_.end(), back_inserter(chosen_cells), num, engine);
 
