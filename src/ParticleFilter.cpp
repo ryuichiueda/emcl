@@ -211,6 +211,8 @@ void ParticleFilter::setScan(const sensor_msgs::LaserScan::ConstPtr &msg)
 	scan_.angle_min_ = msg->angle_min;
 	scan_.angle_max_ = msg->angle_max;
 	scan_.angle_increment_ = msg->angle_increment;
+	scan_.range_min_= msg->range_min;
+	scan_.range_max_= msg->range_max;
 }
 
 double ParticleFilter::normalize(void)
