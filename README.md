@@ -8,9 +8,11 @@ emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wi
 
 The expansion resetting had been used in the classical RoboCup 4-legged robot league as a robust localization mechanism since the robots had made frequent localization errors[^2]. This method expands the distribution of particles when the robot suffers surprising sensor data. This mechanism is effective toward skidding and small range kidnaps of robots.  
 
-### demo movie 
+### demo movies 
 
 [![](https://img.youtube.com/vi/X4zXKi0mr0I/0.jpg)](https://www.youtube.com/watch?v=X4zXKi0mr0I)
+
+[![](https://img.youtube.com/vi/mGkNZUbasXo/0.jpg)](https://www.youtube.com/watch?v=mGkNZUbasXo)
 
 ## Nodes
 
