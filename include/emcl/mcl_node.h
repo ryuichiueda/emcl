@@ -48,6 +48,7 @@ private:
 	std::string base_frame_id_;
 	std::string global_frame_id_;
 	std::string odom_frame_id_;
+	std::string scan_frame_id_;
 
 	std::shared_ptr<tf2_ros::TransformBroadcaster> tfb_;
 	std::shared_ptr<tf2_ros::TransformListener> tfl_;
@@ -67,6 +68,7 @@ private:
 	void publishParticles(void);
 	void sendTf(void);
 	bool getOdomPose(double& x, double& y, double& yaw);
+	bool getLidarPose(double& x, double& y, double& yaw);
 
 	void initCommunication(void);
 	void initPF(void);

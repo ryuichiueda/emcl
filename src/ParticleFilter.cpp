@@ -75,7 +75,7 @@ void ParticleFilter::resampling(void)
 		particles_[i] = old[chosen[i]];
 }
 
-void ParticleFilter::sensorUpdate(void)
+void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t)
 {
 	if(processed_seq_ == scan_.seq_)
 		return;
@@ -86,6 +86,10 @@ void ParticleFilter::sensorUpdate(void)
 		seq = scan_.seq_;
 		scan = scan_;
 	}
+
+	scan.lidar_pose_x_ = lidar_x;
+	scan.lidar_pose_y_ = lidar_y;
+	scan.lidar_pose_yaw_ = lidar_t;
 
 	std::vector<double> ranges;
 	for(auto e : scan.ranges_)

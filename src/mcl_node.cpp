@@ -44,6 +44,7 @@ void MclNode::initCommunication(void)
 	private_nh_.param("global_frame_id", global_frame_id_, std::string("map"));
 	private_nh_.param("base_frame_id", base_frame_id_, std::string("base_footprint"));
 	private_nh_.param("odom_frame_id", odom_frame_id_, std::string("odom"));
+	private_nh_.param("scan_frame_id", scan_frame_id_, std::string("base_scan"));
 
 	tfb_.reset(new tf2_ros::TransformBroadcaster());
 	tf_.reset(new tf2_ros::Buffer());
@@ -138,7 +139,23 @@ void MclNode::loop(void)
 		return;
 	}
 	pf_->motionUpdate(x, y, t);
-	pf_->sensorUpdate();
+
+	double lx, ly, lt;
+	if(not getLidarPose(lx, ly, lt)){
+		ROS_INFO("can't get lidar pose info");
+		return;
+	}
+
+	struct timespec ts_start, ts_end;
+	clock_gettime(CLOCK_REALTIME, &ts_start); 
+	pf_->sensorUpdate(lx, ly, lt);
+	clock_gettime(CLOCK_REALTIME, &ts_end); 
+	struct tm tm;
+	localtime_r( &ts_start.tv_sec, &tm);
+	printf("START: %02d.%09ld\n", tm.tm_sec, ts_start.tv_nsec);
+	localtime_r( &ts_end.tv_sec, &tm);
+	printf("END: %02d.%09ld\n", tm.tm_sec, ts_end.tv_nsec);
+
 
 	double x_var, y_var, t_var, xy_cov, yt_cov, tx_cov;
 	pf_->meanPose(x, y, t, x_var, y_var, t_var, xy_cov, yt_cov, tx_cov);
@@ -247,6 +264,27 @@ bool MclNode::getOdomPose(double& x, double& y, double& yaw)
 	x = odom_pose.pose.position.x;
 	y = odom_pose.pose.position.y;
 	yaw = tf2::getYaw(odom_pose.pose.orientation);
+
+	return true;
+}
+
+bool MclNode::getLidarPose(double& x, double& y, double& yaw)
+{
+	geometry_msgs::PoseStamped ident;
+	ident.header.frame_id = scan_frame_id_;
+	ident.header.stamp = ros::Time(0);
+	tf2::toMsg(tf2::Transform::getIdentity(), ident.pose);
+	
+	geometry_msgs::PoseStamped lidar_pose;
+	try{
+		this->tf_->transform(ident, lidar_pose, "base_link");
+	}catch(tf2::TransformException e){
+    		ROS_WARN("Failed to compute lidar pose, skipping scan (%s)", e.what());
+		return false;
+	}
+	x = lidar_pose.pose.position.x;
+	y = lidar_pose.pose.position.y;
+	yaw = tf2::getYaw(lidar_pose.pose.orientation);
 
 	return true;
 }

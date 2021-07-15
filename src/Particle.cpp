@@ -25,9 +25,13 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 		if(not scan.valid(scan.ranges_[i]))
 			continue;
 
+		double lidar_x = p_.x_ + scan.lidar_pose_x_*cos(p_.t_) - scan.lidar_pose_y_*sin(p_.t_);
+		double lidar_y = p_.y_ + scan.lidar_pose_x_*sin(p_.t_) + scan.lidar_pose_y_*cos(p_.t_);
+		double lidar_t = p_.t_ + scan.lidar_pose_yaw_;
+
 		double ang = scan.angle_min_ + i*scan.angle_increment_;
-		double lx = p_.x_ + scan.ranges_[i] * cos(ang + p_.t_);
-		double ly = p_.y_ + scan.ranges_[i] * sin(ang + p_.t_);
+		double lx = lidar_x + scan.ranges_[i] * cos(ang + lidar_t);
+		double ly = lidar_y + scan.ranges_[i] * sin(ang + lidar_t);
 
 		ans += map->likelihood(lx, ly);
 	}

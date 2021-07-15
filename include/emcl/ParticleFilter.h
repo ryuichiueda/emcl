@@ -35,7 +35,7 @@ public:
 	std::vector<Particle> particles_;
 	double alpha_;
 
-	void sensorUpdate(void);
+	void sensorUpdate(double lidar_x, double lidar_y, double lidar_t);
 	void motionUpdate(double x, double y, double t);
 
 	void initialize(double x, double y, double t);

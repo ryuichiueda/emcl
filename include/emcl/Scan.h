@@ -24,6 +24,10 @@ public:
 	double range_max_;
 	double range_min_;
 
+	double lidar_pose_x_;
+	double lidar_pose_y_;
+	double lidar_pose_yaw_;
+
 	std::vector<double> ranges_;
 
 	Scan& operator=(const Scan &s);
