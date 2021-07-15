@@ -26,6 +26,7 @@ public:
 	double w_;
 
 	Particle operator =(const Particle &p);
+
 };
 
 }

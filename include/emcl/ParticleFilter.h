@@ -46,6 +46,9 @@ public:
 			double &xy_cov, double &yt_cov, double &tx_cov);
 
 	void simpleReset(void);
+
+	static double cos_[(1<<16)];
+	static double sin_[(1<<16)];
 private:
 	Pose *last_odom_;
 	Pose *prev_odom_;
@@ -68,6 +71,9 @@ private:
 
 	void expansionReset(void);
 };
+
+double ParticleFilter::cos_[(1<<16)];
+double ParticleFilter::sin_[(1<<16)];
 
 }
 
