@@ -9,6 +9,7 @@
 #ifndef SCAN_H__
 #define SCAN_H__
 
+#include <iostream>
 #include <vector>
 
 namespace emcl {
@@ -29,6 +30,7 @@ public:
 	double lidar_pose_yaw_;
 
 	std::vector<double> ranges_;
+	std::vector<uint16_t> directions_16bit_;
 
 	Scan& operator=(const Scan &s);
 	int countValidBeams(double *rate = NULL);

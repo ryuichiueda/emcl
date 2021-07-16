@@ -146,8 +146,20 @@ void MclNode::loop(void)
 		ROS_INFO("can't get lidar pose info");
 		return;
 	}
-	pf_->sensorUpdate(lx, ly, lt);
 
+	/*
+	struct timespec ts_start, ts_end;
+	clock_gettime(CLOCK_REALTIME, &ts_start);
+	*/
+	pf_->sensorUpdate(lx, ly, lt);
+	/*
+	clock_gettime(CLOCK_REALTIME, &ts_end);
+	struct tm tm;
+	localtime_r( &ts_start.tv_sec, &tm);
+	printf("START: %02d.%09ld\n", tm.tm_sec, ts_start.tv_nsec);
+	localtime_r( &ts_end.tv_sec, &tm);
+	printf("END: %02d.%09ld\n", tm.tm_sec, ts_end.tv_nsec);
+	*/
 
 	double x_var, y_var, t_var, xy_cov, yt_cov, tx_cov;
 	pf_->meanPose(x, y, t, x_var, y_var, t_var, xy_cov, yt_cov, tx_cov);

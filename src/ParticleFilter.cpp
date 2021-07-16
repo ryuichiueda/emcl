@@ -96,9 +96,11 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 	scan.lidar_pose_y_ = lidar_y;
 	scan.lidar_pose_yaw_ = lidar_t;
 
-	std::vector<double> ranges;
+	int i = 0;
 	for(auto e : scan.ranges_)
-		ranges.push_back(e);
+		scan.directions_16bit_.push_back(
+				Pose::get16bitRepresentation(scan.angle_min_ + (i++)*scan.angle_increment_)
+			);
 
 	double valid_pct = 0.0;
 	int valid_beams = scan.countValidBeams(&valid_pct);

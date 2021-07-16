@@ -28,16 +28,18 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 				+ scan.lidar_pose_y_*ParticleFilter::cos_[t];
 	uint16_t lidar_yaw = Pose::get16bitRepresentation(scan.lidar_pose_yaw_);
 
+	/*
 	uint16_t directions[scan.ranges_.size()];
 	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
 		directions[i] = Pose::get16bitRepresentation(scan.angle_min_ + i*scan.angle_increment_);
 	}
+	*/
 
 	double ans = 0.0;
 	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
 		if(not scan.valid(scan.ranges_[i]))
 			continue;
-		uint16_t a = directions[i] + t + lidar_yaw;
+		uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
 		double lx = lidar_x + scan.ranges_[i] * ParticleFilter::cos_[a];
 		double ly = lidar_y + scan.ranges_[i] * ParticleFilter::sin_[a];
 
