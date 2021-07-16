@@ -119,7 +119,7 @@ void MclNode::initialPoseReceived(const geometry_msgs::PoseWithCovarianceStamped
 	init_request_ = true;
 	init_x_ = msg->pose.pose.position.x;
 	init_y_ = msg->pose.pose.position.y;
-	init_t_ = msg->pose.pose.orientation.z;
+	init_t_ = tf2::getYaw(msg->pose.pose.orientation);
 }
 
 void MclNode::loop(void)
