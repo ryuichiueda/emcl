@@ -33,6 +33,9 @@ public:
 	bool nearlyZero(void);
 
 	double x_, y_, t_;
+
+	uint16_t get16bitRepresentation(void);
+	static uint16_t get16bitRepresentation(double);
 };
 
 }

@@ -76,4 +76,26 @@ bool Pose::nearlyZero(void)
 	return fabs(x_) < 0.001 and fabs(y_) < 0.001 and fabs(t_) < 0.001;
 }
 
+uint16_t Pose::get16bitRepresentation(void)
+{
+	int tmp = t_/M_PI*(1<<15);
+	while(tmp < 0)
+		tmp += (1<<16);
+	while(tmp >= (1<<16))
+		tmp -= (1<<16);
+
+	return (uint16_t)tmp;
+}
+
+uint16_t Pose::get16bitRepresentation(double t)
+{
+	int tmp = t/M_PI*(1<<15);
+	while(tmp < 0)
+		tmp += (1<<16);
+	while(tmp >= (1<<16))
+		tmp -= (1<<16);
+
+	return (uint16_t)tmp;
+}
+
 }
