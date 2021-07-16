@@ -42,9 +42,10 @@ void MclNode::initCommunication(void)
 	global_loc_srv_ = nh_.advertiseService("global_localization", &MclNode::cbSimpleReset, this);
 
 	private_nh_.param("global_frame_id", global_frame_id_, std::string("map"));
-	private_nh_.param("base_frame_id", base_frame_id_, std::string("base_footprint"));
+	private_nh_.param("footprint_frame_id", footprint_frame_id_, std::string("base_footprint"));
 	private_nh_.param("odom_frame_id", odom_frame_id_, std::string("odom"));
 	private_nh_.param("scan_frame_id", scan_frame_id_, std::string("base_scan"));
+	private_nh_.param("base_frame_id", base_frame_id_, std::string("base_link"));
 
 	tfb_.reset(new tf2_ros::TransformBroadcaster());
 	tf_.reset(new tf2_ros::Buffer());
@@ -197,7 +198,7 @@ void MclNode::publishOdomFrame(double x, double y, double t)
 		tf2::Transform tmp_tf(q, tf2::Vector3(x, y, 0.0));
 				
 		geometry_msgs::PoseStamped tmp_tf_stamped;
-		tmp_tf_stamped.header.frame_id = base_frame_id_;
+		tmp_tf_stamped.header.frame_id = footprint_frame_id_;
 		tmp_tf_stamped.header.stamp = ros::Time(0);
 		tf2::toMsg(tmp_tf.inverse(), tmp_tf_stamped.pose);
 		
@@ -241,7 +242,7 @@ void MclNode::publishParticles(void)
 bool MclNode::getOdomPose(double& x, double& y, double& yaw)
 {
 	geometry_msgs::PoseStamped ident;
-	ident.header.frame_id = base_frame_id_;
+	ident.header.frame_id = footprint_frame_id_;
 	ident.header.stamp = ros::Time(0);
 	tf2::toMsg(tf2::Transform::getIdentity(), ident.pose);
 	
@@ -268,7 +269,7 @@ bool MclNode::getLidarPose(double& x, double& y, double& yaw)
 	
 	geometry_msgs::PoseStamped lidar_pose;
 	try{
-		this->tf_->transform(ident, lidar_pose, "base_link");
+		this->tf_->transform(ident, lidar_pose, base_frame_id_);
 	}catch(tf2::TransformException e){
     		ROS_WARN("Failed to compute lidar pose, skipping scan (%s)", e.what());
 		return false;

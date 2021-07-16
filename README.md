@@ -58,8 +58,10 @@ This node transforms laser scans and odometry transform messages to pose estimat
     * number of particles
 * ~odom_frame_id (string, default: "odom")
     * the frame for odometry
-* ~base_frame_id (string, default: "base_footprint")
+* ~footprint_frame_id (string, default: "base_footprint")
     * the frame of the localized robot's base
+* ~base_frame_id (string, default: "base_link")
+    * the frame of the robot's base. It is used for calculating the position and orientation of the LiDAR.
 * ~global_frame_id (string, default: "map")
     * the frame for localization 
 * ~initial_pose_x (double, default: 0.0 [m])

@@ -45,10 +45,11 @@ private:
 
 	ros::ServiceServer global_loc_srv_;
 
-	std::string base_frame_id_;
+	std::string footprint_frame_id_;
 	std::string global_frame_id_;
 	std::string odom_frame_id_;
 	std::string scan_frame_id_;
+	std::string base_frame_id_;
 
 	std::shared_ptr<tf2_ros::TransformBroadcaster> tfb_;
 	std::shared_ptr<tf2_ros::TransformListener> tfl_;

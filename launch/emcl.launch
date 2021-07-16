@@ -12,7 +12,8 @@
     <param name="num_particles"             value="500"/>
 
     <param name="odom_frame_id"             value="odom"/>
-    <param name="base_frame_id"             value="base_footprint"/>
+    <param name="footprint_frame_id"        value="base_footprint"/>
+    <param name="base_frame_id"             value="base_link"/>
 
     <param name="initial_pose_x"            value="$(arg initial_pose_x)"/>
     <param name="initial_pose_y"            value="$(arg initial_pose_y)"/>
