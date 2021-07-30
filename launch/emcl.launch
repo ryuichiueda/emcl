@@ -14,7 +14,6 @@
     <param name="odom_frame_id"             value="odom"/>
     <param name="footprint_frame_id"        value="base_footprint"/>
     <param name="base_frame_id"             value="base_link"/>
-    <param name="scan_frame_id"             value="base_scan"/>
 
     <param name="initial_pose_x"            value="$(arg initial_pose_x)"/>
     <param name="initial_pose_y"            value="$(arg initial_pose_y)"/>
