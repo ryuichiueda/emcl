@@ -16,7 +16,7 @@
 
 namespace emcl {
 
-MclNode::MclNode() : private_nh_("~") 
+MclNode::MclNode() : private_nh_("~")
 {
 	initCommunication();
 	initPF();
@@ -44,7 +44,6 @@ void MclNode::initCommunication(void)
 	private_nh_.param("global_frame_id", global_frame_id_, std::string("map"));
 	private_nh_.param("footprint_frame_id", footprint_frame_id_, std::string("base_footprint"));
 	private_nh_.param("odom_frame_id", odom_frame_id_, std::string("odom"));
-	private_nh_.param("scan_frame_id", scan_frame_id_, std::string("base_scan"));
 	private_nh_.param("base_frame_id", base_frame_id_, std::string("base_link"));
 
 	tfb_.reset(new tf2_ros::TransformBroadcaster());
@@ -112,7 +111,8 @@ std::shared_ptr<LikelihoodFieldMap> MclNode::initMap(void)
 
 void MclNode::cbScan(const sensor_msgs::LaserScan::ConstPtr &msg)
 {
-	pf_->setScan(msg);
+    scan_frame_id_ = msg->header.frame_id;
+    pf_->setScan(msg);
 }
 
 void MclNode::initialPoseReceived(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg)
