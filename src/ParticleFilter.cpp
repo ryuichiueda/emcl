@@ -80,7 +80,7 @@ void ParticleFilter::resampling(void)
 		particles_[i] = old[chosen[i]];
 }
 
-void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t)
+void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv)
 {
 	if(processed_seq_ == scan_.seq_)
 		return;
@@ -97,10 +97,17 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 	scan.lidar_pose_yaw_ = lidar_t;
 
 	int i = 0;
-	for(auto e : scan.ranges_)
-		scan.directions_16bit_.push_back(
+	if (!inv) {
+		for(auto e : scan.ranges_)
+			scan.directions_16bit_.push_back(
 				Pose::get16bitRepresentation(scan.angle_min_ + (i++)*scan.angle_increment_)
 			);
+	} else {
+		for(auto e : scan.ranges_)
+			scan.directions_16bit_.push_back(
+				Pose::get16bitRepresentation(scan.angle_max_ - (i++)*scan.angle_increment_)
+			);
+	}
 
 	double valid_pct = 0.0;
 	int valid_beams = scan.countValidBeams(&valid_pct);

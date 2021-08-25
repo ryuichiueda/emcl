@@ -142,7 +142,8 @@ void MclNode::loop(void)
 	pf_->motionUpdate(x, y, t);
 
 	double lx, ly, lt;
-	if(not getLidarPose(lx, ly, lt)){
+	bool inv;
+	if(not getLidarPose(lx, ly, lt, inv)){
 		ROS_INFO("can't get lidar pose info");
 		return;
 	}
@@ -151,7 +152,7 @@ void MclNode::loop(void)
 	struct timespec ts_start, ts_end;
 	clock_gettime(CLOCK_REALTIME, &ts_start);
 	*/
-	pf_->sensorUpdate(lx, ly, lt);
+	pf_->sensorUpdate(lx, ly, lt, inv);
 	/*
 	clock_gettime(CLOCK_REALTIME, &ts_end);
 	struct tm tm;
@@ -272,7 +273,7 @@ bool MclNode::getOdomPose(double& x, double& y, double& yaw)
 	return true;
 }
 
-bool MclNode::getLidarPose(double& x, double& y, double& yaw)
+bool MclNode::getLidarPose(double& x, double& y, double& yaw, bool& inv)
 {
 	geometry_msgs::PoseStamped ident;
 	ident.header.frame_id = scan_frame_id_;
@@ -288,7 +289,10 @@ bool MclNode::getLidarPose(double& x, double& y, double& yaw)
 	}
 	x = lidar_pose.pose.position.x;
 	y = lidar_pose.pose.position.y;
-	yaw = tf2::getYaw(lidar_pose.pose.orientation);
+
+	double roll, pitch;
+	tf2::getEulerYPR(lidar_pose.pose.orientation, yaw, pitch, roll);
+	inv = (fabs(pitch) > M_PI/2 || fabs(roll) > M_PI/2) ? true : false;
 
 	return true;
 }
