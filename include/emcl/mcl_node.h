@@ -69,7 +69,7 @@ private:
 	void publishParticles(void);
 	void sendTf(void);
 	bool getOdomPose(double& x, double& y, double& yaw);
-	bool getLidarPose(double& x, double& y, double& yaw);
+	bool getLidarPose(double& x, double& y, double& yaw, bool& inv);
 
 	void initCommunication(void);
 	void initPF(void);
