@@ -114,8 +114,6 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 	if(valid_beams == 0)
 		return;
 
-	for(auto &p : particles_)
-		p.w_ *= p.likelihood(map_.get(), scan);
 
 	static uint8_t count = 0;
 	int skip = particles_.size()/10;
@@ -123,7 +121,7 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 	int pene = 0;
 	int not_pene = 0;
 	for(int i=shift;i<particles_.size();i+=skip){
-		std::cout << i << std::endl;
+		//std::cout << i << std::endl;
 		if(particles_[i].penetrationCheck(map_.get(), scan))
 			pene++;
 		else
@@ -139,9 +137,12 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 	if(pene > 8){
 		ROS_INFO("RESET");
 		expansionReset();
-		for(auto &p : particles_)
-			p.w_ *= p.likelihood(map_.get(), scan);
+	//	for(auto &p : particles_)
+	//		p.w_ *= p.likelihood(map_.get(), scan);
 	}
+
+	for(auto &p : particles_)
+		p.w_ *= p.likelihood(map_.get(), scan);
 
 	if(normalizeBelief() > 0.000001)
 		resampling();

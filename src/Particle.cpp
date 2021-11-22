@@ -53,27 +53,29 @@ bool Particle::penetrationCheck(LikelihoodFieldMap *map, Scan &scan)
 
 	double ans = 0.0;
 	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
-		double range = scan.ranges_[i];
-		if(std::isnan(range))
+		if(not scan.valid(scan.ranges_[i]))
 			continue;
 
-		if(std::isinf(range))
-			range = 0.0;
-
+		double range = scan.ranges_[i];
 		uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
 
-		double lx = lidar_x + range * ParticleFilter::cos_[a];
-		double ly = lidar_y + range * ParticleFilter::sin_[a];
-
 		bool hit = false;
+		double hit_lx = 0.0;
+		double hit_ly = 0.0;
 		for(double d=0.0;d<range;d+=map->resolution_){
 			double lx = lidar_x + d * ParticleFilter::cos_[a];
 			double ly = lidar_y + d * ParticleFilter::sin_[a];
 
-			if(map->likelihood(lx, ly) > 0.99)
+			if(map->likelihood(lx, ly) > 0.99){
 				hit = true;
+				hit_lx = lx;
+				hit_ly = ly;
+			}
 			else if(hit and map->likelihood(lx, ly) == 0.0){ // openspace after hit
-		//		std::cout << "hit" << std::endl;
+				/* a kind of sensor reset */
+				p_.x_ -= lx - hit_lx;
+				p_.y_ -= ly - hit_ly;
+
 				return true; // penetration
 			}
 		}

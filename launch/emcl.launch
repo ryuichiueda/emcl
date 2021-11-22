@@ -29,8 +29,8 @@
     <param name="alpha_threshold" value="0.6"/>
     <param name="open_space_threshold" value="0.5"/>
 
-    <param name="expansion_radius_position" value="0.1"/>
-    <param name="expansion_radius_orientation" value="0.2"/>
+    <param name="expansion_radius_position" value="0.2"/>
+    <param name="expansion_radius_orientation" value="0.4"/>
 
     <remap from="scan"                      to="$(arg scan_topic)"/>
     <param name="laser_min_range"           value="0.0"/>
