@@ -115,6 +115,11 @@ The likelihoods on the field are normalized. The maximum value is 1.0. The alpha
 * ROS Noetic Ninjemys (on Ubuntu 20.04 LTS, test on my note PC)
 * ROS Melodic Morenia (on Ubuntu 18.04 LTS, test on GitHub Actions)
 
+## bugs and problems
+
+* The resetting method wrongly works at open spaces.
+    * an example: https://www.youtube.com/watch?v=Y2J627hRmqU
+
 ## citation
 
 [^1]: R. Ueda: "[Syokai Kakuritsu Robotics (lecture note on probabilistic robotics)](https://www.amazon.co.jp/dp/B082SN3VTD)," Kodansya, 2019.
