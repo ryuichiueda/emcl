@@ -117,8 +117,26 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 	for(auto &p : particles_)
 		p.w_ *= p.likelihood(map_.get(), scan);
 
+	static uint8_t count = 0;
+	int skip = particles_.size()/10;
+	int shift = count%10;
+	int pene = 0;
+	int not_pene = 0;
+	for(int i=shift;i<particles_.size();i+=skip){
+		std::cout << i << std::endl;
+		if(particles_[i].penetrationCheck(map_.get(), scan))
+			pene++;
+		else
+			not_pene++;
+	}
+	std::cout << "PENETRATION RATE: " << pene << " "<< not_pene << std::endl;
+
+	count++;
+
 	alpha_ = normalizeBelief()/valid_beams;
-	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
+	ROS_INFO("ALPHA: %f", alpha_);
+	//if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
+	if(pene > 8){
 		ROS_INFO("RESET");
 		expansionReset();
 		for(auto &p : particles_)

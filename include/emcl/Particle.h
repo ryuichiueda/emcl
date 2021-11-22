@@ -22,6 +22,8 @@ public:
 	Particle(double x, double y, double t, double w);
 
 	double likelihood(LikelihoodFieldMap *map, Scan &scan);
+	bool penetrationCheck(LikelihoodFieldMap *map, Scan &scan);
+
 	Pose p_;
 	double w_;
 
