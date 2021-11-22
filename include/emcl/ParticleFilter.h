@@ -58,7 +58,7 @@ private:
 
 	double normalizeAngle(double t);
 	void resampling(void);
-	double normalize(void);
+	double normalizeBelief(void);
 	void resetWeight(void);
 
 	std::shared_ptr<OdomModel> odom_model_;

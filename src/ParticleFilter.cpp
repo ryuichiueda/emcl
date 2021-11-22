@@ -117,7 +117,7 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 	for(auto &p : particles_)
 		p.w_ *= p.likelihood(map_.get(), scan);
 
-	alpha_ = normalize()/valid_beams;
+	alpha_ = normalizeBelief()/valid_beams;
 	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
 		ROS_INFO("RESET");
 		expansionReset();
@@ -125,7 +125,7 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 			p.w_ *= p.likelihood(map_.get(), scan);
 	}
 
-	if(normalize() > 0.000001)
+	if(normalizeBelief() > 0.000001)
 		resampling();
 	else
 		resetWeight();
@@ -233,7 +233,7 @@ void ParticleFilter::setScan(const sensor_msgs::LaserScan::ConstPtr &msg)
 	scan_.range_max_= msg->range_max;
 }
 
-double ParticleFilter::normalize(void)
+double ParticleFilter::normalizeBelief(void)
 {
 	double sum = 0.0;
 	for(const auto &p : particles_)
