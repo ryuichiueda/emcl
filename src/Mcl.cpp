@@ -15,13 +15,9 @@
 namespace emcl {
 
 Mcl::Mcl(const Pose &p, int num, const Scan &scan,
-				const std::shared_ptr<OdomModel> &odom_model,
-				const std::shared_ptr<LikelihoodFieldMap> &map,
-				double alpha_th, double open_space_th,
-				double expansion_radius_position, double expansion_radius_orientation)
-	: last_odom_(NULL), prev_odom_(NULL), alpha_threshold_(alpha_th), open_space_threshold_(open_space_th),
-	  expansion_radius_position_(expansion_radius_position),
-	  expansion_radius_orientation_(expansion_radius_orientation)
+		const std::shared_ptr<OdomModel> &odom_model,
+		const std::shared_ptr<LikelihoodFieldMap> &map)
+	: last_odom_(NULL), prev_odom_(NULL)
 {
 	odom_model_ = move(odom_model);
 	map_ = move(map);
@@ -117,6 +113,7 @@ void Mcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv)
 	for(auto &p : particles_)
 		p.w_ *= p.likelihood(map_.get(), scan);
 
+	/*
 	alpha_ = normalizeBelief()/valid_beams;
 	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
 		ROS_INFO("RESET");
@@ -124,6 +121,7 @@ void Mcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv)
 		for(auto &p : particles_)
 			p.w_ *= p.likelihood(map_.get(), scan);
 	}
+	*/
 
 	if(normalizeBelief() > 0.000001)
 		resampling();
@@ -261,19 +259,6 @@ void Mcl::initialize(double x, double y, double t)
 		p.p_ = new_pose;
 
 	resetWeight();
-}
-
-void Mcl::expansionReset(void)
-{
-	for(auto &p : particles_){
-		double length = 2*((double)rand()/RAND_MAX - 0.5)*expansion_radius_position_;
-		double direction = 2*((double)rand()/RAND_MAX - 0.5)*M_PI;
-
-		p.p_.x_ += length*cos(direction);
-		p.p_.y_ += length*sin(direction);
-		p.p_.t_ += 2*((double)rand()/RAND_MAX - 0.5)*expansion_radius_orientation_;
-		p.w_ = 1.0/particles_.size();
-	}
 }
 
 void Mcl::simpleReset(void)

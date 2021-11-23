@@ -5,7 +5,7 @@
   <arg name="initial_pose_y" default="-0.5"/>
   <arg name="initial_pose_a" default="0.0"/>
 
-  <!-- AMCL -->
+  <!-- EMCL -->
   <node pkg="emcl" type="emcl_node" name="emcl_node" output="screen">
 
     <param name="odom_freq"                 value="20"/>
