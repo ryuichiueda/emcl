@@ -6,7 +6,7 @@
  *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
  */
 
-#include "emcl/ParticleFilter.h"
+#include "emcl/Mcl.h"
 #include <ros/ros.h>
 #include <iostream>
 #include <stdlib.h>
@@ -14,7 +14,7 @@
 
 namespace emcl {
 
-ParticleFilter::ParticleFilter(const Pose &p, int num, const Scan &scan,
+Mcl::Mcl(const Pose &p, int num, const Scan &scan,
 				const std::shared_ptr<OdomModel> &odom_model,
 				const std::shared_ptr<LikelihoodFieldMap> &map,
 				double alpha_th, double open_space_th,
@@ -43,13 +43,13 @@ ParticleFilter::ParticleFilter(const Pose &p, int num, const Scan &scan,
 	}
 }
 
-ParticleFilter::~ParticleFilter()
+Mcl::~Mcl()
 {
 	delete last_odom_;
 	delete prev_odom_;
 }
 
-void ParticleFilter::resampling(void)
+void Mcl::resampling(void)
 {
 	std::vector<double> accum;
 	accum.push_back(particles_[0].w_);
@@ -80,7 +80,7 @@ void ParticleFilter::resampling(void)
 		particles_[i] = old[chosen[i]];
 }
 
-void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv)
+void Mcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv)
 {
 	if(processed_seq_ == scan_.seq_)
 		return;
@@ -133,7 +133,7 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 	processed_seq_ = scan_.seq_;
 }
 
-void ParticleFilter::motionUpdate(double x, double y, double t)
+void Mcl::motionUpdate(double x, double y, double t)
 {
 	if(last_odom_ == NULL){
 		last_odom_ = new Pose(x, y, t);
@@ -158,7 +158,7 @@ void ParticleFilter::motionUpdate(double x, double y, double t)
 	prev_odom_->set(*last_odom_);
 }
 
-void ParticleFilter::meanPose(double &x_mean, double &y_mean, double &t_mean,
+void Mcl::meanPose(double &x_mean, double &y_mean, double &t_mean,
 				double &x_dev, double &y_dev, double &t_dev,
 				double &xy_cov, double &yt_cov, double &tx_cov)
 {
@@ -207,7 +207,7 @@ void ParticleFilter::meanPose(double &x_mean, double &y_mean, double &t_mean,
 	tx_cov = tx/(particles_.size() - 1);
 }
 
-double ParticleFilter::normalizeAngle(double t)
+double Mcl::normalizeAngle(double t)
 {
 	while(t > M_PI)
 		t -= 2*M_PI;
@@ -217,7 +217,7 @@ double ParticleFilter::normalizeAngle(double t)
 	return t;
 }
 
-void ParticleFilter::setScan(const sensor_msgs::LaserScan::ConstPtr &msg)
+void Mcl::setScan(const sensor_msgs::LaserScan::ConstPtr &msg)
 {
 	if(msg->ranges.size() != scan_.ranges_.size())
 		scan_.ranges_.resize(msg->ranges.size());
@@ -233,7 +233,7 @@ void ParticleFilter::setScan(const sensor_msgs::LaserScan::ConstPtr &msg)
 	scan_.range_max_= msg->range_max;
 }
 
-double ParticleFilter::normalizeBelief(void)
+double Mcl::normalizeBelief(void)
 {
 	double sum = 0.0;
 	for(const auto &p : particles_)
@@ -248,13 +248,13 @@ double ParticleFilter::normalizeBelief(void)
 	return sum;
 }
 
-void ParticleFilter::resetWeight(void)
+void Mcl::resetWeight(void)
 {
 	for(auto &p : particles_)
 		p.w_ = 1.0/particles_.size();
 }
 
-void ParticleFilter::initialize(double x, double y, double t)
+void Mcl::initialize(double x, double y, double t)
 {
 	Pose new_pose(x, y, t);
 	for(auto &p : particles_)
@@ -263,7 +263,7 @@ void ParticleFilter::initialize(double x, double y, double t)
 	resetWeight();
 }
 
-void ParticleFilter::expansionReset(void)
+void Mcl::expansionReset(void)
 {
 	for(auto &p : particles_){
 		double length = 2*((double)rand()/RAND_MAX - 0.5)*expansion_radius_position_;
@@ -276,7 +276,7 @@ void ParticleFilter::expansionReset(void)
 	}
 }
 
-void ParticleFilter::simpleReset(void)
+void Mcl::simpleReset(void)
 {
 	std::vector<Pose> poses;
 	map_->drawFreePoses(particles_.size(), poses);

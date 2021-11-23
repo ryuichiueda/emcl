@@ -7,7 +7,7 @@
  */
 
 #include "emcl/Particle.h"
-#include "emcl/ParticleFilter.h"
+#include "emcl/Mcl.h"
 #include <cmath>
 
 namespace emcl {
@@ -22,10 +22,10 @@ Particle::Particle(double x, double y, double t, double w) : p_(x, y, t)
 double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 {
 	uint16_t t = p_.get16bitRepresentation();
-	double lidar_x = p_.x_ + scan.lidar_pose_x_*ParticleFilter::cos_[t] 
-				- scan.lidar_pose_y_*ParticleFilter::sin_[t];
-	double lidar_y = p_.y_ + scan.lidar_pose_x_*ParticleFilter::sin_[t] 
-				+ scan.lidar_pose_y_*ParticleFilter::cos_[t];
+	double lidar_x = p_.x_ + scan.lidar_pose_x_*Mcl::cos_[t] 
+				- scan.lidar_pose_y_*Mcl::sin_[t];
+	double lidar_y = p_.y_ + scan.lidar_pose_x_*Mcl::sin_[t] 
+				+ scan.lidar_pose_y_*Mcl::cos_[t];
 	uint16_t lidar_yaw = Pose::get16bitRepresentation(scan.lidar_pose_yaw_);
 
 	/*
@@ -40,8 +40,8 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 		if(not scan.valid(scan.ranges_[i]))
 			continue;
 		uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
-		double lx = lidar_x + scan.ranges_[i] * ParticleFilter::cos_[a];
-		double ly = lidar_y + scan.ranges_[i] * ParticleFilter::sin_[a];
+		double lx = lidar_x + scan.ranges_[i] * Mcl::cos_[a];
+		double ly = lidar_y + scan.ranges_[i] * Mcl::sin_[a];
 
 		ans += map->likelihood(lx, ly);
 	}

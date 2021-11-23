@@ -75,7 +75,7 @@ void MclNode::initPF(void)
 	private_nh_.param("expansion_radius_position", ex_rad_pos, 0.1);
 	private_nh_.param("expansion_radius_orientation", ex_rad_ori, 0.2);
 
-	pf_.reset(new ParticleFilter(init_pose, num_particles, scan, om, map,
+	pf_.reset(new Mcl(init_pose, num_particles, scan, om, map,
 				alpha_th, open_space_th, ex_rad_pos, ex_rad_ori));
 }
 

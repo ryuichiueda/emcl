@@ -11,7 +11,7 @@
 #define INTERFACE_H__
 
 #include <ros/ros.h>
-#include "emcl/ParticleFilter.h"
+#include "emcl/Mcl.h"
 
 #include "tf2_ros/transform_broadcaster.h"
 #include "tf2_ros/transform_listener.h"
@@ -33,7 +33,7 @@ public:
 	void loop(void);
 	int getOdomFreq(void);
 private:
-	std::shared_ptr<ParticleFilter> pf_;
+	std::shared_ptr<Mcl> pf_;
 	ros::NodeHandle nh_;
 	ros::NodeHandle private_nh_;
 

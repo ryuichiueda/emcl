@@ -22,15 +22,15 @@
 
 namespace emcl {
 
-class ParticleFilter
+class Mcl
 {
 public: 
-	ParticleFilter(const Pose &p, int num, const Scan &scan,
+	Mcl(const Pose &p, int num, const Scan &scan,
 			const std::shared_ptr<OdomModel> &odom_model,
 			const std::shared_ptr<LikelihoodFieldMap> &map,
 			double alpha_th, double open_space_th,
 			double expansion_radius_position, double expansion_radius_orientation);
-	~ParticleFilter();
+	~Mcl();
 
 	std::vector<Particle> particles_;
 	double alpha_;
@@ -72,8 +72,8 @@ private:
 	void expansionReset(void);
 };
 
-double ParticleFilter::cos_[(1<<16)];
-double ParticleFilter::sin_[(1<<16)];
+double Mcl::cos_[(1<<16)];
+double Mcl::sin_[(1<<16)];
 
 }
 
