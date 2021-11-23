@@ -22,11 +22,14 @@ public:
 	Particle(double x, double y, double t, double w);
 
 	double likelihood(LikelihoodFieldMap *map, Scan &scan);
+	bool isPenetrating(LikelihoodFieldMap *map, Scan &scan);
 	Pose p_;
 	double w_;
 
 	Particle operator =(const Particle &p);
-
+private:
+	bool isPenetrating(double ox, double oy, double range, uint16_t direction, 
+			LikelihoodFieldMap *map, double &hit_lx, double &hit_ly);
 };
 
 }

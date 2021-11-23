@@ -67,6 +67,8 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 		p.w_ *= p.likelihood(map_.get(), scan);
 
 	alpha_ = normalizeBelief()/valid_beams;
+	//alpha_ = nonPenetrationRate( particles_.size() / 20, map_.get(), scan); //new version
+	ROS_INFO("ALPHA: %f / %f", alpha_, alpha_threshold_);
 	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
 		ROS_INFO("RESET");
 		expansionReset();
@@ -80,6 +82,22 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 		resetWeight();
 
 	processed_seq_ = scan_.seq_;
+}
+
+double ExpResetMcl::nonPenetrationRate(int skip, LikelihoodFieldMap *map, Scan &scan)
+{
+	static uint16_t shift = 0;
+	int counter = 0;
+	int penetrating = 0;
+	for(int i=shift%skip; i<particles_.size(); i+=skip){
+		counter++;
+		if(particles_[i].isPenetrating(map, scan))
+			penetrating++;
+	}
+	shift++;
+
+	std::cout << penetrating << " " << counter << std::endl;
+	return (double)(counter - penetrating) / counter;
 }
 
 void ExpResetMcl::expansionReset(void)

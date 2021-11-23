@@ -28,13 +28,6 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 				+ scan.lidar_pose_y_*Mcl::cos_[t];
 	uint16_t lidar_yaw = Pose::get16bitRepresentation(scan.lidar_pose_yaw_);
 
-	/*
-	uint16_t directions[scan.ranges_.size()];
-	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
-		directions[i] = Pose::get16bitRepresentation(scan.angle_min_ + i*scan.angle_increment_);
-	}
-	*/
-
 	double ans = 0.0;
 	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
 		if(not scan.valid(scan.ranges_[i]))
@@ -46,6 +39,63 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 		ans += map->likelihood(lx, ly);
 	}
 	return ans;
+}
+
+bool Particle::isPenetrating(LikelihoodFieldMap *map, Scan &scan)
+{
+	uint16_t t = p_.get16bitRepresentation();
+	double lidar_x = p_.x_ + scan.lidar_pose_x_*Mcl::cos_[t]
+				- scan.lidar_pose_y_*Mcl::sin_[t];
+	double lidar_y = p_.y_ + scan.lidar_pose_x_*Mcl::sin_[t]
+				+ scan.lidar_pose_y_*Mcl::cos_[t];
+	uint16_t lidar_yaw = Pose::get16bitRepresentation(scan.lidar_pose_yaw_);
+
+	uint16_t t_delta = Pose::get16bitRepresentation(10.0/180 * M_PI);
+
+	double ans = 0.0;
+	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
+		if(not scan.valid(scan.ranges_[i]))
+			continue;
+
+		double range = scan.ranges_[i];
+		uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
+
+		double hit_lx, hit_ly;
+		if(isPenetrating(lidar_x, lidar_y, range, a, map, hit_lx, hit_ly)){
+			double tmp_lx, tmp_ly;
+			if(isPenetrating(lidar_x, lidar_y, range, a + t_delta, map, tmp_lx, tmp_ly) and
+	   		isPenetrating(lidar_x, lidar_y, range, a - t_delta, map, tmp_lx, tmp_ly) and
+		   	isPenetrating(lidar_x - 0.5, lidar_y, range, a, map, tmp_lx, tmp_ly) and
+		   	isPenetrating(lidar_x + 0.5, lidar_y, range, a, map, tmp_lx, tmp_ly) and
+		   	isPenetrating(lidar_x, lidar_y + 0.5, range, a, map, tmp_lx, tmp_ly) and
+		   	isPenetrating(lidar_x, lidar_y - 0.5, range, a, map, tmp_lx, tmp_ly)){
+				p_.x_ -= lidar_x + range * Mcl::cos_[a] - hit_lx;
+				p_.y_ -= lidar_y + range * Mcl::sin_[a]- hit_ly;
+				return true; // penetration
+			}
+		}
+	}
+	return false;
+}
+
+bool Particle::isPenetrating(double ox, double oy, double range, uint16_t direction,
+		LikelihoodFieldMap *map, double &hit_lx, double &hit_ly)
+{
+	bool hit = false;
+	for(double d=map->resolution_;d<range;d+=map->resolution_){
+		double lx = ox + d * Mcl::cos_[direction];
+		double ly = oy + d * Mcl::sin_[direction];
+
+		if((not hit) and map->likelihood(lx, ly) > 0.99){
+			hit = true;
+			hit_lx = lx;
+			hit_ly = ly;
+		}
+		else if(hit and map->likelihood(lx, ly) == 0.0){ // openspace after hit
+			return true; // penetration
+		}
+	}
+	return false;
 }
 
 Particle Particle::operator =(const Particle &p)
