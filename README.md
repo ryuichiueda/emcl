@@ -18,7 +18,11 @@ The expansion resetting had been used in the classical RoboCup 4-legged robot le
 
 ### mcl_node
 
-This node transforms laser scans and odometry transform messages to pose estimations by using an occupancy grid map. 
+This node transforms laser scans and odometry transform messages to pose estimations by using an occupancy grid map. This node does not use any resetting method. 
+
+### emcl_node
+
+This node works as mcl_node with expansion resettings. 
 
 #### Subscribed Topics 
 
@@ -50,7 +54,7 @@ This node transforms laser scans and odometry transform messages to pose estimat
 * static_map ([nav_msgs/GetMap](http://docs.ros.org/en/api/nav_msgs/html/srv/GetMap.html))
     * Initiate the map for localization.
 
-#### Parameters
+#### Common parameters for mcl_node and others 
 
 * ~odom_freq (int, default: 20 [Hz])
     * frequency of odometry update
@@ -80,6 +84,19 @@ This node transforms laser scans and odometry transform messages to pose estimat
     * standard deviation of rotational motion noise by rotational motion
 * ~laser_likelihood_max_dist (double, default: 0.2 meters)
     * maximum distance to inflate occupied cells on the likelihood field map
+* ~scan_increment (int, default: 1)
+    * increment number when beams are picked from their sequence; the larger this number is, the fewer number of beams are used for calculation of likelihood
+
+
+The followings have never been implemented yet.
+
+* ~laser_min_range (double, default: 0.0[m])
+    * threshold for discarding scans whose ranges are smaller than this value 
+* ~laser_max_range (double, default: 100000000.0[m])
+    * threshold for discarding scans whose ranges are larger than this value 
+
+#### Parameters for emcl_node
+
 * ~alpha_threshold (double, default: 0.0)
     * threshold of the alpha value for expansion resetting
 * ~open_space_threshold (double, default: 0.05)
@@ -88,15 +105,7 @@ This node transforms laser scans and odometry transform messages to pose estimat
     * maximum change of the position on the xy-plane when the reset replaces a particle
 * ~expansion_radius_orientation (double, default: 0.2)
     * maximum change of the yaw angle when the reset replaces a particle
-* ~scan_increment (int, default: 1)
-    * increment number when beams are picked from their sequence; the larger this number is, the fewer number of beams are used for calculation of likelihood
 
-#### Parameters to be available
-
-* ~laser_min_range (double, default: 0.0[m])
-    * threshold for discarding scans whose ranges are smaller than this value 
-* ~laser_max_range (double, default: 100000000.0[m])
-    * threshold for discarding scans whose ranges are larger than this value 
 
 ## Notes
 
