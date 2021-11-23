@@ -1,0 +1,37 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="scan_topic"     default="scan"/>
+  <arg name="initial_pose_x" default="-2.0"/>
+  <arg name="initial_pose_y" default="-0.5"/>
+  <arg name="initial_pose_a" default="0.0"/>
+
+  <!-- MCL -->
+  <node pkg="emcl" type="mcl_node" name="mcl_node" output="screen">
+
+    <param name="odom_freq"                 value="20"/>
+    <param name="num_particles"             value="500"/>
+
+    <param name="odom_frame_id"             value="odom"/>
+    <param name="footprint_frame_id"        value="base_footprint"/>
+    <param name="base_frame_id"             value="base_link"/>
+
+    <param name="initial_pose_x"            value="$(arg initial_pose_x)"/>
+    <param name="initial_pose_y"            value="$(arg initial_pose_y)"/>
+    <param name="initial_pose_a"            value="$(arg initial_pose_a)"/>
+
+    <param name="odom_fw_dev_per_fw"       value="0.19"/>
+    <param name="odom_fw_dev_per_rot"      value="0.0001"/>
+    <param name="odom_rot_dev_per_fw"      value="0.13"/>
+    <param name="odom_rot_dev_per_rot"     value="0.2"/>
+
+    <param name="laser_likelihood_max_dist" value="0.2"/>
+
+    <remap from="scan"                      to="$(arg scan_topic)"/>
+    <param name="laser_min_range"           value="0.0"/>
+    <param name="laser_max_range"           value="100000000.0"/>
+
+    <param name="scan_increment"           value="1"/>
+
+  </node>
+</launch>
+
