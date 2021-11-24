@@ -19,12 +19,13 @@ ExpResetMcl2::ExpResetMcl2(const Pose &p, int num, const Scan &scan,
 				const std::shared_ptr<LikelihoodFieldMap> &map,
 				double alpha_th, 
 				double expansion_radius_position, double expansion_radius_orientation,
-				double extraction_rate, double range_threshold)
+				double extraction_rate, double range_threshold, bool sensor_reset)
 	: alpha_threshold_(alpha_th), 
 	  expansion_radius_position_(expansion_radius_position),
 	  expansion_radius_orientation_(expansion_radius_orientation),
 	  extraction_rate_(extraction_rate),
 	  range_threshold_(range_threshold),
+	  sensor_reset_(sensor_reset),
 	  Mcl::Mcl(p, num, scan, odom_model, map)
 {
 }
@@ -70,7 +71,7 @@ void ExpResetMcl2::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, 
 	for(auto &p : particles_)
 		p.w_ *= p.likelihood(map_.get(), scan);
 
-	alpha_ = nonPenetrationRate( (int)(particles_.size()*extraction_rate_), map_.get(), scan, range_threshold_);
+	alpha_ = nonPenetrationRate( (int)(particles_.size()*extraction_rate_), map_.get(), scan);
 	ROS_INFO("ALPHA: %f / %f", alpha_, alpha_threshold_);
 	if(alpha_ < alpha_threshold_){
 		ROS_INFO("RESET");
@@ -87,14 +88,14 @@ void ExpResetMcl2::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, 
 	processed_seq_ = scan_.seq_;
 }
 
-double ExpResetMcl2::nonPenetrationRate(int skip, LikelihoodFieldMap *map, Scan &scan, double threshold)
+double ExpResetMcl2::nonPenetrationRate(int skip, LikelihoodFieldMap *map, Scan &scan)
 {
 	static uint16_t shift = 0;
 	int counter = 0;
 	int penetrating = 0;
 	for(int i=shift%skip; i<particles_.size(); i+=skip){
 		counter++;
-		if(particles_[i].isPenetrating(map, scan, threshold))
+		if(particles_[i].isPenetrating(map, scan, range_threshold_, sensor_reset_))
 			penetrating++;
 	}
 	shift++;

@@ -118,7 +118,7 @@ This node uses expansion resettings. The expansion resetting had been used in th
 
 The alpha value becomes 1.0 when all valid beams hit the 1.0 cells on the likelihood field map. A suitable `~alpha_threshold` value exists in the range between 0.0 and 1.0. In a noisy environment, or with a noisy sensor, the value should be near zero so as to prohibit excess resets. However, please note that a reset doesn't change the center of particles largely. So it's okay even if resettings occur sporadically. Please check the `/alpha` topic under various conditions so as to find a suitable `~alpha_threshold` value. 
 
-## bugs
+#### bugs
 
 The resetting method wrongly works at open spaces. Please use emcl2_node in this case. 
 
@@ -134,6 +134,7 @@ This node calculates the alpha value with another algorithm. This node counts th
 
 If the rate of the wrong particles is greater than `~alpha_threshold`, the node invokes a reset. 
 
+This node also has a sensor resetting algorithm. When `~sensor_reset` is true, a particle with laser penetration is dragged back from occupied cells. 
 
 #### Parameters
 
@@ -148,6 +149,8 @@ If the rate of the wrong particles is greater than `~alpha_threshold`, the node 
     * rate of particles that are checked by the node
 * ~range_threshold (double, default: 0.2[rad])
     * threshold of the range of lasers; if all lasers on this range penetrate occupancy cells, the pose of the particle is judged as wrong
+* ~sensor_reset (bool, default: true)
+    * flag for sensor resettings
 
 ## ROS version 
 

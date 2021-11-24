@@ -33,7 +33,8 @@ public:
 			const std::shared_ptr<LikelihoodFieldMap> &map,
 			double alpha_th,
 			double expansion_radius_position, double expansion_radius_orientation,
-			double extraction_rate, double successive_penetration_threshold);
+			double extraction_rate, double successive_penetration_threshold,
+			bool sensor_reset);
 	~ExpResetMcl2();
 
 	void sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv);
@@ -44,11 +45,12 @@ private:
 
 	double extraction_rate_;
 	double range_threshold_;
+	bool sensor_reset_;
 
 	void expansionReset(void);
 
 //bool Particle::isPenetrating(
-	double nonPenetrationRate(int skip, LikelihoodFieldMap *map, Scan &scan, double threshold);
+	double nonPenetrationRate(int skip, LikelihoodFieldMap *map, Scan &scan);
 };
 
 }
