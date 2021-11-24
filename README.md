@@ -147,7 +147,7 @@ This node also has a sensor resetting algorithm. When `~sensor_reset` is true, a
     * maximum change of the yaw angle when the reset replaces a particle
 * ~extraction_rate (double, default: 0.1)
     * rate of particles that are checked by the node
-* ~range_threshold (double, default: 0.2[rad])
+* ~range_threshold (double, default: 0.1[rad])
     * threshold of the range of lasers; if all lasers on this range penetrate occupancy cells, the pose of the particle is judged as wrong
 * ~sensor_reset (bool, default: true)
     * flag for sensor resettings

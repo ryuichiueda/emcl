@@ -26,11 +26,13 @@
 
     <param name="laser_likelihood_max_dist" value="0.2"/>
 
-    <param name="alpha_threshold" value="0.2"/>
+    <param name="alpha_threshold" value="0.5"/>
     <param name="open_space_threshold" value="0.05"/>
 
     <param name="expansion_radius_position" value="0.1"/>
     <param name="expansion_radius_orientation" value="0.2"/>
+
+    <param name="range_threshold" value="0.3"/>
 
     <remap from="scan"                      to="$(arg scan_topic)"/>
     <param name="laser_min_range"           value="0.0"/>

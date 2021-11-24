@@ -54,26 +54,52 @@ bool Particle::isPenetrating(LikelihoodFieldMap *map, Scan &scan, double thresho
 
 	double ans = 0.0;
 	int hit_counter = 0;
-	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
-		if(not scan.valid(scan.ranges_[i]))
-			continue;
 
-		double range = scan.ranges_[i];
-		uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
-
-		double hit_lx, hit_ly;
-		if(isPenetrating(lidar_x, lidar_y, range, a, map, hit_lx, hit_ly))
-			hit_counter++;
-		else
-			hit_counter = 0;
-
-		if(hit_counter*scan.angle_increment_ >= threshold){
-			if(replace){
-				p_.x_ -= lidar_x + range * Mcl::cos_[a] - hit_lx;
-				p_.y_ -= lidar_y + range * Mcl::sin_[a]- hit_ly;
+	if(rand()%2){
+		for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
+			if(not scan.valid(scan.ranges_[i]))
+				continue;
+	
+			double range = scan.ranges_[i];
+			uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
+	
+			double hit_lx, hit_ly;
+			if(isPenetrating(lidar_x, lidar_y, range, a, map, hit_lx, hit_ly))
+				hit_counter++;
+			else
+				hit_counter = 0;
+	
+			if(hit_counter*scan.angle_increment_ >= threshold){
+				if(replace){
+					p_.x_ -= lidar_x + range * Mcl::cos_[a] - hit_lx;
+					p_.y_ -= lidar_y + range * Mcl::sin_[a] - hit_ly;
+				}
+				return true;
 			}
-			return true;
 		}
+	}else{
+		for(int i=scan.ranges_.size()-1;i>=0;i-=scan.scan_increment_){
+			if(not scan.valid(scan.ranges_[i]))
+				continue;
+	
+			double range = scan.ranges_[i];
+			uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
+	
+			double hit_lx, hit_ly;
+			if(isPenetrating(lidar_x, lidar_y, range, a, map, hit_lx, hit_ly))
+				hit_counter++;
+			else
+				hit_counter = 0;
+	
+			if(hit_counter*scan.angle_increment_ >= threshold){
+				if(replace){
+					p_.x_ -= lidar_x + range * Mcl::cos_[a] - hit_lx;
+					p_.y_ -= lidar_y + range * Mcl::sin_[a] - hit_ly;
+				}
+				return true;
+			}
+		}
+
 	}
 	return false;
 }
