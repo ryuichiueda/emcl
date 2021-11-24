@@ -7,11 +7,11 @@
  */
 
 
-#ifndef INTERFACE_EMCL_H__
-#define INTERFACE_EMCL_H__
+#ifndef INTERFACE_EMCL2_H__
+#define INTERFACE_EMCL2_H__
 
 #include <ros/ros.h>
-#include "emcl/ExpResetMcl.h"
+#include "emcl/ExpResetMcl2.h"
 
 #include "tf2_ros/transform_broadcaster.h"
 #include "tf2_ros/transform_listener.h"
@@ -24,16 +24,16 @@
 
 namespace emcl {
 
-class EMclNode
+class EMcl2Node
 {
 public:
-	EMclNode();
-	~EMclNode();
+	EMcl2Node();
+	~EMcl2Node();
 
 	void loop(void);
 	int getOdomFreq(void);
 private:
-	std::shared_ptr<ExpResetMcl> pf_;
+	std::shared_ptr<ExpResetMcl2> pf_;
 	ros::NodeHandle nh_;
 	ros::NodeHandle private_nh_;
 

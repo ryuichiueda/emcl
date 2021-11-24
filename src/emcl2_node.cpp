@@ -6,7 +6,7 @@
  *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
  */
 
-#include "emcl/mcl_node.h"
+#include "emcl/emcl2_node.h"
 #include "emcl/Pose.h"
 
 #include "tf2/utils.h"
@@ -16,7 +16,7 @@
 
 namespace emcl {
 
-MclNode::MclNode() : private_nh_("~")
+EMcl2Node::EMcl2Node() : private_nh_("~")
 {
 	initCommunication();
 	initPF();
@@ -27,19 +27,19 @@ MclNode::MclNode() : private_nh_("~")
 	simple_reset_request_ = false;
 }
 
-MclNode::~MclNode()
+EMcl2Node::~EMcl2Node()
 {
 }
 
-void MclNode::initCommunication(void)
+void EMcl2Node::initCommunication(void)
 {
 	particlecloud_pub_ = nh_.advertise<geometry_msgs::PoseArray>("particlecloud", 2, true);
 	pose_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("mcl_pose", 2, true);
 	alpha_pub_ = nh_.advertise<std_msgs::Float32>("alpha", 2, true);
-	laser_scan_sub_ = nh_.subscribe("scan", 2, &MclNode::cbScan, this);
-	initial_pose_sub_ = nh_.subscribe("initialpose", 2, &MclNode::initialPoseReceived, this);
+	laser_scan_sub_ = nh_.subscribe("scan", 2, &EMcl2Node::cbScan, this);
+	initial_pose_sub_ = nh_.subscribe("initialpose", 2, &EMcl2Node::initialPoseReceived, this);
 
-	global_loc_srv_ = nh_.advertiseService("global_localization", &MclNode::cbSimpleReset, this);
+	global_loc_srv_ = nh_.advertiseService("global_localization", &EMcl2Node::cbSimpleReset, this);
 
 	private_nh_.param("global_frame_id", global_frame_id_, std::string("map"));
 	private_nh_.param("footprint_frame_id", footprint_frame_id_, std::string("base_footprint"));
@@ -51,7 +51,7 @@ void MclNode::initCommunication(void)
 	tfl_.reset(new tf2_ros::TransformListener(*tf_));
 }
 
-void MclNode::initPF(void)
+void EMcl2Node::initPF(void)
 {
 	std::shared_ptr<LikelihoodFieldMap> map = std::move(initMap());
 	std::shared_ptr<OdomModel> om = std::move(initOdometry());
@@ -67,12 +67,23 @@ void MclNode::initPF(void)
 	private_nh_.param("initial_pose_a", init_pose.t_, 0.0);
 
 	int num_particles;
+	double alpha_th;
+	double ex_rad_pos, ex_rad_ori;
 	private_nh_.param("num_particles", num_particles, 0);
+	private_nh_.param("alpha_threshold", alpha_th, 0.5);
+	private_nh_.param("expansion_radius_position", ex_rad_pos, 0.1);
+	private_nh_.param("expansion_radius_orientation", ex_rad_ori, 0.2);
 
-	pf_.reset(new Mcl(init_pose, num_particles, scan, om, map));
+	double extraction_rate, range_threshold;
+	private_nh_.param("extraction_rate", extraction_rate, 0.1);
+	private_nh_.param("range_threshold", range_threshold, 0.2);
+
+	pf_.reset(new ExpResetMcl2(init_pose, num_particles, scan, om, map,
+				alpha_th, ex_rad_pos, ex_rad_ori,
+				extraction_rate, range_threshold));
 }
 
-std::shared_ptr<OdomModel> MclNode::initOdometry(void)
+std::shared_ptr<OdomModel> EMcl2Node::initOdometry(void)
 {
 	double ff, fr, rf, rr;
 	private_nh_.param("odom_fw_dev_per_fw", ff, 0.19);
@@ -82,7 +93,7 @@ std::shared_ptr<OdomModel> MclNode::initOdometry(void)
 	return std::shared_ptr<OdomModel>(new OdomModel(ff, fr, rf, rr));
 }
 
-std::shared_ptr<LikelihoodFieldMap> MclNode::initMap(void)
+std::shared_ptr<LikelihoodFieldMap> EMcl2Node::initMap(void)
 {
 	double likelihood_range;
 	private_nh_.param("laser_likelihood_max_dist", likelihood_range, 0.2);
@@ -102,13 +113,13 @@ std::shared_ptr<LikelihoodFieldMap> MclNode::initMap(void)
 	return std::shared_ptr<LikelihoodFieldMap>(new LikelihoodFieldMap(resp.map, likelihood_range));
 }
 
-void MclNode::cbScan(const sensor_msgs::LaserScan::ConstPtr &msg)
+void EMcl2Node::cbScan(const sensor_msgs::LaserScan::ConstPtr &msg)
 {
     scan_frame_id_ = msg->header.frame_id;
     pf_->setScan(msg);
 }
 
-void MclNode::initialPoseReceived(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg)
+void EMcl2Node::initialPoseReceived(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg)
 {
 	init_request_ = true;
 	init_x_ = msg->pose.pose.position.x;
@@ -116,7 +127,7 @@ void MclNode::initialPoseReceived(const geometry_msgs::PoseWithCovarianceStamped
 	init_t_ = tf2::getYaw(msg->pose.pose.orientation);
 }
 
-void MclNode::loop(void)
+void EMcl2Node::loop(void)
 {
 	if(init_request_){
 		pf_->initialize(init_x_, init_y_, init_t_);
@@ -167,7 +178,7 @@ void MclNode::loop(void)
 	alpha_pub_.publish(alpha_msg);
 }
 
-void MclNode::publishPose(double x, double y, double t,
+void EMcl2Node::publishPose(double x, double y, double t,
 			double x_dev, double y_dev, double t_dev,
 			double xy_cov, double yt_cov, double tx_cov)
 {
@@ -195,7 +206,7 @@ void MclNode::publishPose(double x, double y, double t,
 	pose_pub_.publish(p);
 }
 
-void MclNode::publishOdomFrame(double x, double y, double t)
+void EMcl2Node::publishOdomFrame(double x, double y, double t)
 {
 	geometry_msgs::PoseStamped odom_to_map;
 	try{
@@ -226,7 +237,7 @@ void MclNode::publishOdomFrame(double x, double y, double t)
 	tfb_->sendTransform(tmp_tf_stamped);
 }
 
-void MclNode::publishParticles(void)
+void EMcl2Node::publishParticles(void)
 {
 	geometry_msgs::PoseArray cloud_msg;
 	cloud_msg.header.stamp = ros::Time::now();
@@ -245,7 +256,7 @@ void MclNode::publishParticles(void)
 	particlecloud_pub_.publish(cloud_msg);
 }
 
-bool MclNode::getOdomPose(double& x, double& y, double& yaw)
+bool EMcl2Node::getOdomPose(double& x, double& y, double& yaw)
 {
 	geometry_msgs::PoseStamped ident;
 	ident.header.frame_id = footprint_frame_id_;
@@ -266,7 +277,7 @@ bool MclNode::getOdomPose(double& x, double& y, double& yaw)
 	return true;
 }
 
-bool MclNode::getLidarPose(double& x, double& y, double& yaw, bool& inv)
+bool EMcl2Node::getLidarPose(double& x, double& y, double& yaw, bool& inv)
 {
 	geometry_msgs::PoseStamped ident;
 	ident.header.frame_id = scan_frame_id_;
@@ -290,11 +301,11 @@ bool MclNode::getLidarPose(double& x, double& y, double& yaw, bool& inv)
 	return true;
 }
 
-int MclNode::getOdomFreq(void){
+int EMcl2Node::getOdomFreq(void){
 	return odom_freq_;
 }
 
-bool MclNode::cbSimpleReset(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+bool EMcl2Node::cbSimpleReset(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
 {
 	return simple_reset_request_ = true;
 }
@@ -305,7 +316,7 @@ int main(int argc, char **argv)
 {
 
 	ros::init(argc, argv, "mcl_node");
-	emcl::MclNode node;
+	emcl::EMcl2Node node;
 
 	ros::Rate loop_rate(node.getOdomFreq());
 	while (ros::ok()){

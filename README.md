@@ -2,11 +2,8 @@
 
 ![test](https://github.com/ryuichiueda/emcl/actions/workflows/test.yml/badge.svg)
 
-emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wiki.ros.org/amcl). Differently from amcl, KLD-sampling and adaptive MCL are not implemented. Instead, the expansion resetting is implemented[^1].
+emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wiki.ros.org/amcl). Differently from amcl, KLD-sampling and adaptive MCL are not implemented. Instead, the expansion resetting and other features are implemented[^1].
 
-## expansion resetting
-
-The expansion resetting had been used in the classical RoboCup 4-legged robot league as a robust localization mechanism since the robots had made frequent localization errors[^2]. This method expands the distribution of particles when the robot suffers surprising sensor data. This mechanism is effective toward skidding and small range kidnaps of robots.  
 
 ## demo movies 
 
@@ -19,10 +16,6 @@ The expansion resetting had been used in the classical RoboCup 4-legged robot le
 ### mcl_node
 
 This node transforms laser scans and odometry transform messages to pose estimations by using an occupancy grid map. This node does not use any resetting method. 
-
-### emcl_node
-
-This node works as mcl_node with expansion resettings. 
 
 #### Subscribed Topics 
 
@@ -54,7 +47,7 @@ This node works as mcl_node with expansion resettings.
 * static_map ([nav_msgs/GetMap](http://docs.ros.org/en/api/nav_msgs/html/srv/GetMap.html))
     * Initiate the map for localization.
 
-#### Common parameters for mcl_node and others 
+#### parameters
 
 * ~odom_freq (int, default: 20 [Hz])
     * frequency of odometry update
@@ -95,8 +88,22 @@ The followings have never been implemented yet.
 * ~laser_max_range (double, default: 100000000.0[m])
     * threshold for discarding scans whose ranges are larger than this value 
 
-#### Parameters for emcl_node
+#### limitation
 
+Only one 2D LiDAR placed in a horizontal fashion is supported.
+
+#### note: likelihood field
+
+This implementation uses an ad-hoc likelihood field model. Occupied cells on the map are inflated so that each collision detection between a laser beam and an occupied cell is relaxed. The likelihood for each cell is given with a pyramidal kernel function. The parameter `~laser_likelihood_max_dist` gives the length from the center cell to the edge of the pyramid. The likelihoods on the field are normalized. The maximum value is 1.0. 
+
+### emcl_node
+
+This node uses expansion resettings. The expansion resetting had been used in the classical RoboCup 4-legged robot league as a robust localization mechanism since the robots had made frequent localization errors[^2]. This method expands the distribution of particles when the robot suffers surprising sensor data. This mechanism is effective toward skidding and small range kidnaps of robots. 
+
+
+#### Parameters
+
+* all parameters of mcl_node
 * ~alpha_threshold (double, default: 0.0)
     * threshold of the alpha value for expansion resetting
 * ~open_space_threshold (double, default: 0.05)
@@ -107,27 +114,46 @@ The followings have never been implemented yet.
     * maximum change of the yaw angle when the reset replaces a particle
 
 
-## Notes
+#### note: alpha value
 
-### limitation
+The alpha value becomes 1.0 when all valid beams hit the 1.0 cells on the likelihood field map. A suitable `~alpha_threshold` value exists in the range between 0.0 and 1.0. In a noisy environment, or with a noisy sensor, the value should be near zero so as to prohibit excess resets. However, please note that a reset doesn't change the center of particles largely. So it's okay even if resettings occur sporadically. Please check the `/alpha` topic under various conditions so as to find a suitable `~alpha_threshold` value. 
 
-Only one 2D LiDAR placed in a horizontal fashion is supported.
+## bugs
 
-### likelihood field and alpha value
+The resetting method wrongly works at open spaces. Please use emcl2_node in this case. 
 
-This implementation uses an ad-hoc likelihood field model. Occupied cells on the map are inflated so that each collision detection between a laser beam and an occupied cell is relaxed. The likelihood for each cell is given with a pyramidal kernel function. The parameter `~laser_likelihood_max_dist` gives the length from the center cell to the edge of the pyramid.
+* an example: https://www.youtube.com/watch?v=Y2J627hRmqU
 
-The likelihoods on the field are normalized. The maximum value is 1.0. The alpha value becomes 1.0 when all valid beams hit the 1.0 cells. A suitable `~alpha_threshold` value exists in the range between 0.0 and 1.0. In a noisy environment, or with a noisy sensor, the value should be near zero so as to prohibit excess resets. However, please note that a reset doesn't change the center of particles largely. So it's okay even if resettings occur sporadically. Please check the `/alpha` topic under various conditions so as to find a suitable `~alpha_threshold` value. 
+
+### emcl2_node
+
+This node calculates the alpha value with another algorithm. This node counts the particles that make lasers penetrate occupancy cells. Specifically, this node chooses some particles at a rate of `~extraction_rate` and checks each of them with the following procedure:
+
+* maps a set of laser scan on the occupancy grid map based on the pose of the particle
+* judges the pose of the particle as wrong if all of lasers in a `~range_threshold`[rad] range penatrate occupancy grids
+
+If the rate of the wrong particles is greater than `~alpha_threshold`, the node invokes a reset. 
+
+
+#### Parameters
+
+* all parameters of mcl_node
+* ~alpha_threshold (double, default: 0.5)
+    * threshold of the alpha value for expansion resetting
+* ~expansion_radius_position (double, default: 0.1[m])
+    * maximum change of the position on the xy-plane when the reset replaces a particle
+* ~expansion_radius_orientation (double, default: 0.2[rad])
+    * maximum change of the yaw angle when the reset replaces a particle
+* ~extraction_rate (double, default: 0.1)
+    * rate of particles that are checked by the node
+* ~range_threshold (double, default: 0.2[rad])
+    * threshold of the range of lasers; if all lasers on this range penetrate occupancy cells, the pose of the particle is judged as wrong
 
 ## ROS version 
 
 * ROS Noetic Ninjemys (on Ubuntu 20.04 LTS, test on my note PC)
 * ROS Melodic Morenia (on Ubuntu 18.04 LTS, test on GitHub Actions)
 
-## bugs and problems
-
-* The resetting method wrongly works at open spaces.
-    * an example: https://www.youtube.com/watch?v=Y2J627hRmqU
 
 ## citation
 

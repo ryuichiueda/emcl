@@ -22,7 +22,7 @@ public:
 	Particle(double x, double y, double t, double w);
 
 	double likelihood(LikelihoodFieldMap *map, Scan &scan);
-	bool isPenetrating(LikelihoodFieldMap *map, Scan &scan);
+	bool isPenetrating(LikelihoodFieldMap *map, Scan &scan, double threshold);
 	Pose p_;
 	double w_;
 

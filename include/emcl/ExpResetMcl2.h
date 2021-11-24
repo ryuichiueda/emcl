@@ -6,8 +6,8 @@
  *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef EXP_PF_H__
-#define EXP_PF_H__
+#ifndef EXP_PF2_H__
+#define EXP_PF2_H__
 
 #include "emcl/Mcl.h"
 /*
@@ -25,24 +25,30 @@
 
 namespace emcl {
 
-class ExpResetMcl : public Mcl
+class ExpResetMcl2 : public Mcl
 {
 public: 
-	ExpResetMcl(const Pose &p, int num, const Scan &scan,
+	ExpResetMcl2(const Pose &p, int num, const Scan &scan,
 			const std::shared_ptr<OdomModel> &odom_model,
 			const std::shared_ptr<LikelihoodFieldMap> &map,
-			double alpha_th, double open_space_th,
-			double expansion_radius_position, double expansion_radius_orientation);
-	~ExpResetMcl();
+			double alpha_th,
+			double expansion_radius_position, double expansion_radius_orientation,
+			double extraction_rate, double successive_penetration_threshold);
+	~ExpResetMcl2();
 
 	void sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv);
 private:
 	double alpha_threshold_;
-	double open_space_threshold_;
 	double expansion_radius_position_;
 	double expansion_radius_orientation_;
 
+	double extraction_rate_;
+	double range_threshold_;
+
 	void expansionReset(void);
+
+//bool Particle::isPenetrating(
+	double nonPenetrationRate(int skip, LikelihoodFieldMap *map, Scan &scan, double threshold);
 };
 
 }
