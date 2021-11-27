@@ -122,8 +122,21 @@ void Particle::sensorReset(double ox, double oy,
 	double p2_x = ox + range2 * Mcl::cos_[direction2];
 	double p2_y = oy + range2 * Mcl::sin_[direction2];
 
-	p_.x_ -= (p1_x + p2_x)/2 - (hit_lx1 + hit_lx2)/2;
-	p_.y_ -= (p1_y + p2_y)/2 - (hit_ly1 + hit_ly2)/2;
+	double cx = (hit_lx1 + hit_lx2)/2;
+	double cy = (hit_ly1 + hit_ly2)/2;
+
+	p_.x_ -= (p1_x + p2_x)/2 - cx;
+	p_.y_ -= (p1_y + p2_y)/2 - cy;
+
+	double theta_delta = atan2(p2_y - p1_y, p2_x - p1_x) - atan2(hit_ly2 - hit_ly1, hit_lx2 - hit_lx1);
+	/*
+	double d = std::sqrt((p_.x_ - cx)*(p_.x_ - cx) + (p_.y_ - cy)*(p_.y_ - cy));
+
+	double theta = atan2(p_.y_ - cy, p_.x_ - cx) - theta_delta;
+	p_.x_ = cx + d * std::cos(theta);
+	p_.y_ = cy + d * std::cos(theta);
+*/
+	p_.t_ -= theta_delta;
 }
 
 Particle Particle::operator =(const Particle &p)
