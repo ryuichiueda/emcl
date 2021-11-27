@@ -50,55 +50,45 @@ bool Particle::wallConflict(LikelihoodFieldMap *map, Scan &scan, double threshol
 				+ scan.lidar_pose_y_*Mcl::cos_[t];
 	uint16_t lidar_yaw = Pose::get16bitRepresentation(scan.lidar_pose_yaw_);
 
-	uint16_t t_delta = Pose::get16bitRepresentation(10.0/180 * M_PI);
+	std::vector<int> order;
+	if(rand()%2){
+		for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_)
+			order.push_back(i);
+	}else{
+		for(int i=scan.ranges_.size()-1;i>=0;i-=scan.scan_increment_)
+			order.push_back(i);
+	}
 
 	int hit_counter = 0;
-
-	if(rand()%2){
-		for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
-			if(not scan.valid(scan.ranges_[i]))
-				continue;
+	for(int i : order){
+		if(not scan.valid(scan.ranges_[i]))
+			continue;
 	
-			double range = scan.ranges_[i];
-			uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
+		double range = scan.ranges_[i];
+		uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
 	
-			double hit_lx, hit_ly;
-			if(isPenetrating(lidar_x, lidar_y, range, a, map, hit_lx, hit_ly))
-				hit_counter++;
-			else
-				hit_counter = 0;
-	
-			if(hit_counter*scan.angle_increment_ >= threshold and replace){
-				if(replace){
-					p_.x_ -= lidar_x + range * Mcl::cos_[a] - hit_lx;
-					p_.y_ -= lidar_y + range * Mcl::sin_[a] - hit_ly;
-				}
-				return true;
+		double hit_lx, hit_ly;
+		double hit_lx1, hit_ly1, r1;
+		uint16_t a1;
+		if(isPenetrating(lidar_x, lidar_y, range, a, map, hit_lx, hit_ly)){
+			if(hit_counter == 0){
+				hit_lx1 = hit_lx;
+				hit_ly1 = hit_ly;
+				r1 = range;
+				a1 = a;
 			}
-		}
-	}else{
-		for(int i=scan.ranges_.size()-1;i>=0;i-=scan.scan_increment_){
-			if(not scan.valid(scan.ranges_[i]))
-				continue;
-	
-			double range = scan.ranges_[i];
-			uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
-	
-			double hit_lx, hit_ly;
-			if(isPenetrating(lidar_x, lidar_y, range, a, map, hit_lx, hit_ly))
-				hit_counter++;
-			else
-				hit_counter = 0;
-	
-			if(hit_counter*scan.angle_increment_ >= threshold and replace){
-				if(replace){
-					p_.x_ -= lidar_x + range * Mcl::cos_[a] - hit_lx;
-					p_.y_ -= lidar_y + range * Mcl::sin_[a] - hit_ly;
-				}
-				return true;
-			}
-		}
 
+			hit_counter++;
+		}else
+			hit_counter = 0;
+
+		if(hit_counter*scan.angle_increment_ >= threshold){
+			if(replace)
+				sensorReset(lidar_x, lidar_y,
+						r1, a1, hit_lx1, hit_ly1,
+						range, a, hit_lx, hit_ly);
+			return true;
+		}
 	}
 	return false;
 }
@@ -121,6 +111,19 @@ bool Particle::isPenetrating(double ox, double oy, double range, uint16_t direct
 		}
 	}
 	return false;
+}
+
+void Particle::sensorReset(double ox, double oy,
+		double range1, uint16_t direction1, double hit_lx1, double hit_ly1,
+		double range2, uint16_t direction2, double hit_lx2, double hit_ly2)
+{
+	double p1_x = ox + range1 * Mcl::cos_[direction1];
+	double p1_y = oy + range1 * Mcl::sin_[direction1];
+	double p2_x = ox + range2 * Mcl::cos_[direction2];
+	double p2_y = oy + range2 * Mcl::sin_[direction2];
+
+	p_.x_ -= (p1_x + p2_x)/2 - (hit_lx1 + hit_lx2)/2;
+	p_.y_ -= (p1_y + p2_y)/2 - (hit_ly1 + hit_ly2)/2;
 }
 
 Particle Particle::operator =(const Particle &p)

@@ -30,6 +30,13 @@ public:
 private:
 	bool isPenetrating(double ox, double oy, double range, uint16_t direction, 
 			LikelihoodFieldMap *map, double &hit_lx, double &hit_ly);
+
+	bool checkWallConflict(LikelihoodFieldMap *map, double ox, double oy, 
+			double range, uint16_t direction, double threshold, bool replace);
+
+	void sensorReset(double ox, double oy,
+		double range1, uint16_t direction1, double hit_lx1, double hit_ly1,
+		double range2, uint16_t direction2, double hit_lx2, double hit_ly2);
 };
 
 }
