@@ -1,27 +1,10 @@
-/*
- *  Copyright (c) 2021, Ryuichi Ueda
- *
- *  All rights reserved.
- *  Some lines are derived from https://github.com/ros-planning/navigation/tree/noetic-devel/amcl. 
- *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
- */
+//SPDX-FileCopyrightText: 2022 Ryuichi Ueda ryuichiueda@gmail.com
+//SPDX-License-Identifier: LGPL-3.0-or-later
 
 #ifndef EXP_PF_H__
 #define EXP_PF_H__
 
 #include "emcl/Mcl.h"
-/*
-#include <vector>
-#include <sstream>
-#include <random>
-
-#include "emcl/Particle.h"
-#include "emcl/OdomModel.h"
-#include "emcl/LikelihoodFieldMap.h"
-
-#include "nav_msgs/OccupancyGrid.h"
-#include "sensor_msgs/LaserScan.h"
-*/
 
 namespace emcl {
 

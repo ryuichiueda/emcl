@@ -1,10 +1,6 @@
-/*
- *  Copyright (c) 2021, Ryuichi Ueda
- *
- *  All rights reserved.
- *  Some lines are derived from https://github.com/ros-planning/navigation/tree/noetic-devel/amcl. 
- *  So this software is provided under the terms of the GNU Lesser General Public License (LGPL).
- */
+//SPDX-FileCopyrightText: 2022 Ryuichi Ueda ryuichiueda@gmail.com
+//SPDX-License-Identifier: LGPL-3.0-or-later
+//Some lines are derived from https://github.com/ros-planning/navigation/tree/noetic-devel/amcl. 
 
 #include "emcl/OdomModel.h"
 #include <ros/ros.h>
