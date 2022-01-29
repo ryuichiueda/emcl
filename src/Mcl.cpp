@@ -1,7 +1,6 @@
 //SPDX-FileCopyrightText: 2022 Ryuichi Ueda ryuichiueda@gmail.com
 //SPDX-License-Identifier: LGPL-3.0-or-later
 //Some lines are derived from https://github.com/ros-planning/navigation/tree/noetic-devel/amcl. 
-
 #include "emcl/Mcl.h"
 #include <ros/ros.h>
 #include <iostream>
