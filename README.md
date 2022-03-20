@@ -1,6 +1,6 @@
-# emcl: mcl with expansion resetting
+# emcl2: mcl with expansion resetting (version 2)
 
-![test](https://github.com/ryuichiueda/emcl/actions/workflows/test.yml/badge.svg)
+![test](https://github.com/ryuichiueda/emcl2/actions/workflows/test.yml/badge.svg)
 
 emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wiki.ros.org/amcl). Differently from amcl, KLD-sampling and adaptive MCL are not implemented. Instead, the expansion resetting and other features are implemented[^1].
 
@@ -127,30 +127,7 @@ The resetting method wrongly works at open spaces. Please use emcl2_node in this
 
 ### emcl2_node
 
-This node calculates the alpha value with another algorithm. This node counts the particles that make lasers penetrate occupancy cells. Specifically, this node chooses some particles at a rate of `~extraction_rate` and checks each of them with the following procedure:
-
-* maps a set of laser scan on the occupancy grid map based on the pose of the particle
-* judges the pose of the particle as wrong if all of lasers in a `~range_threshold`[rad] range penatrate occupancy grids
-
-If the rate of the wrong particles is greater than `~alpha_threshold`, the node invokes a reset. 
-
-This node also has a sensor resetting algorithm. When `~sensor_reset` is true, a particle with laser penetration is dragged back from occupied cells. 
-
-#### Parameters
-
-* all parameters of mcl_node
-* ~alpha_threshold (double, default: 0.5)
-    * threshold of the alpha value for expansion resetting
-* ~expansion_radius_position (double, default: 0.1[m])
-    * maximum change of the position on the xy-plane when the reset replaces a particle
-* ~expansion_radius_orientation (double, default: 0.2[rad])
-    * maximum change of the yaw angle when the reset replaces a particle
-* ~extraction_rate (double, default: 0.1)
-    * rate of particles that are checked by the node
-* ~range_threshold (double, default: 0.1[rad])
-    * threshold of the range of lasers; if all lasers on this range penetrate occupancy cells, the pose of the particle is judged as wrong
-* ~sensor_reset (bool, default: true)
-    * flag for sensor resettings
+This node is moved to [ryuichiueda/emcl2](https://github.com/ryuichiueda/emcl2) since this package became too enlarged. 
 
 ## ROS version 
 
