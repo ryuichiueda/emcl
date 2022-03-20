@@ -4,6 +4,7 @@
 
 emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wiki.ros.org/amcl). Differently from amcl, KLD-sampling and adaptive MCL are not implemented. Instead, the expansion resetting and other features are implemented[^1].
 
+** A more robust version can be seen in [ryuichiueda/emcl2](https://github.com/ryuichiueda/emcl2).** But this version is simple and suitable to customize. 
 
 ## demo movies 
 
@@ -127,7 +128,7 @@ The resetting method wrongly works at open spaces. Please use emcl2_node in this
 
 ### emcl2_node
 
-This node is moved to [ryuichiueda/emcl2](https://github.com/ryuichiueda/emcl2) since this package became too enlarged. 
+This node is moved to [ryuichiueda/emcl2](https://github.com/ryuichiueda/emcl2) since this package became too enlarged. The emcl2 node is robust in crowd of people and in open spaces. Please see the emcl2 repository.
 
 ## ROS version 
 
