@@ -121,10 +121,9 @@ The alpha value becomes 1.0 when all valid beams hit the 1.0 cells on the likeli
 
 #### bugs
 
-The resetting method wrongly works at open spaces. Please use emcl2_node in this case. 
+The resetting method wrongly works at open spaces. In this case, please use the emcl2 package, which is explained below.
 
 * an example: https://www.youtube.com/watch?v=Y2J627hRmqU
-
 
 ### emcl2_node
 
