@@ -1,4 +1,4 @@
-# emcl2: mcl with expansion resetting (version 2)
+# emcl: mcl with expansion resetting
 
 ![test](https://github.com/ryuichiueda/emcl2/actions/workflows/test.yml/badge.svg)
 
