@@ -2,7 +2,7 @@
 
 ![test](https://github.com/ryuichiueda/emcl/actions/workflows/test.yml/badge.svg)
 
-emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wiki.ros.org/amcl). Differently from amcl, KLD-sampling and adaptive MCL are not implemented. Instead, the expansion resetting and other features are implemented[^1].
+emcl is an alternative Monte Carlo localization (MCL) package to amcl (http://wiki.ros.org/amcl). Differently from amcl, KLD-sampling and adaptive MCL are not implemented. Instead, the expansion resetting and other features are implemented[^1][^2].
 
 **A more robust version is available in [ryuichiueda/emcl2](https://github.com/ryuichiueda/emcl2).** But this version is simple and suitable to customize. 
 
