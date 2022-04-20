@@ -65,7 +65,8 @@ void LikelihoodFieldMap::setLikelihood(int x, int y, double range)
 
 	for(int i=-cell_num; i<=cell_num; i++)
 		for(int j=-cell_num; j<=cell_num; j++)
-			likelihoods_[i+x][j+y] = std::max(likelihoods_[i+x][j+y], 
+			if(i+x >= 0 and i+y >= 0 and i+x < width_ and i+y < height_)
+				likelihoods_[i+x][j+y] = std::max(likelihoods_[i+x][j+y], 
 			                         std::min(weights[abs(i)], weights[abs(j)]));
 }
 
